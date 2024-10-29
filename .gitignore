@@ -127,3 +127,4 @@ nb-configuration.xml
 
 writable
 app/Config/Database.php
+frondend/node_modules
