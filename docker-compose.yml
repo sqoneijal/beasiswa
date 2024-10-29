@@ -1,6 +1,6 @@
 services:
-   beasiswa-backend:
-      container_name: beasiswa-backend
+   beasiswa-api:
+      container_name: beasiswa-api
       build:
          context: ./
          dockerfile: ./Dockerfile
