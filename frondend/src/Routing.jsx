@@ -3,6 +3,7 @@ import { Bars } from "react-loader-spinner";
 import { Route, Routes } from "react-router-dom";
 
 const Home = React.lazy(() => import("./page/home/Context"));
+const Profile = React.lazy(() => import("./page/profile/Context"));
 
 const Routing = () => {
    const loader = (
@@ -22,6 +23,7 @@ const Routing = () => {
    return (
       <Routes>
          <Route path="/" loader={loader} element={<Home />} />
+         <Route path="profile" loader={loader} element={<Profile />} />
       </Routes>
    );
 };

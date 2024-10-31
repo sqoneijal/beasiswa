@@ -1,9 +1,15 @@
 import lozad from "lozad";
 import React, { useLayoutEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { Each } from "~/Each";
+import * as h from "~/Helpers";
 
 const ExploreBeasiswa = () => {
+   const { module } = useSelector((e) => e.redux);
+   const { daftarMasterBeasiswa } = module;
+
    useLayoutEffect(() => {
       lozad().observe();
       return () => {};
@@ -24,112 +30,26 @@ const ExploreBeasiswa = () => {
                   </div>
                </Col>
             </Row>
-            <div className="row">
-               <div className="col-xl-3 col-lg-4 col-sm-6">
-                  <div className="h2_category-item mb-30">
-                     <div className="h2_category-img">
-                        <img src="https://themephi.net/template/eduan/eduan/assets/img/category/2/1.jpg" alt="" />
-                     </div>
-                     <div className="h2_category-content">
-                        <h5>
-                           <a href="course.html">Digital Marketing</a>
-                        </h5>
-                        <p>26 Items</p>
-                     </div>
-                  </div>
-               </div>
-               <div className="col-xl-3 col-lg-4 col-sm-6">
-                  <div className="h2_category-item mb-30">
-                     <div className="h2_category-img">
-                        <img src="https://themephi.net/template/eduan/eduan/assets/img/category/2/2.jpg" alt="" />
-                     </div>
-                     <div className="h2_category-content">
-                        <h5>
-                           <a href="course.html">Graphic Design</a>
-                        </h5>
-                        <p>26 Items</p>
-                     </div>
-                  </div>
-               </div>
-               <div className="col-xl-3 col-lg-4 col-sm-6">
-                  <div className="h2_category-item mb-30">
-                     <div className="h2_category-img">
-                        <img src="https://themephi.net/template/eduan/eduan/assets/img/category/2/3.jpg" alt="" />
-                     </div>
-                     <div className="h2_category-content">
-                        <h5>
-                           <a href="course.html">Writing &amp; Reading</a>
-                        </h5>
-                        <p>26 Items</p>
-                     </div>
-                  </div>
-               </div>
-               <div className="col-xl-3 col-lg-4 col-sm-6">
-                  <div className="h2_category-item mb-30">
-                     <div className="h2_category-img">
-                        <img src="https://themephi.net/template/eduan/eduan/assets/img/category/2/4.jpg" alt="" />
-                     </div>
-                     <div className="h2_category-content">
-                        <h5>
-                           <a href="course.html">IT &amp; Software</a>
-                        </h5>
-                        <p>26 Items</p>
-                     </div>
-                  </div>
-               </div>
-               <div className="col-xl-3 col-lg-4 col-sm-6">
-                  <div className="h2_category-item mb-30">
-                     <div className="h2_category-img">
-                        <img src="https://themephi.net/template/eduan/eduan/assets/img/category/2/5.jpg" alt="" />
-                     </div>
-                     <div className="h2_category-content">
-                        <h5>
-                           <a href="course.html">Mobile Application</a>
-                        </h5>
-                        <p>26 Items</p>
-                     </div>
-                  </div>
-               </div>
-               <div className="col-xl-3 col-lg-4 col-sm-6">
-                  <div className="h2_category-item mb-30">
-                     <div className="h2_category-img">
-                        <img src="https://themephi.net/template/eduan/eduan/assets/img/category/2/6.jpg" alt="" />
-                     </div>
-                     <div className="h2_category-content">
-                        <h5>
-                           <a href="course.html">Art &amp; Humanities</a>
-                        </h5>
-                        <p>26 Items</p>
-                     </div>
-                  </div>
-               </div>
-               <div className="col-xl-3 col-lg-4 col-sm-6">
-                  <div className="h2_category-item mb-30">
-                     <div className="h2_category-img">
-                        <img src="https://themephi.net/template/eduan/eduan/assets/img/category/2/7.jpg" alt="" />
-                     </div>
-                     <div className="h2_category-content">
-                        <h5>
-                           <a href="course.html">Web Design</a>
-                        </h5>
-                        <p>26 Items</p>
-                     </div>
-                  </div>
-               </div>
-               <div className="col-xl-3 col-lg-4 col-sm-6">
-                  <div className="h2_category-item mb-30">
-                     <div className="h2_category-img">
-                        <img src="https://themephi.net/template/eduan/eduan/assets/img/category/2/8.jpg" alt="" />
-                     </div>
-                     <div className="h2_category-content">
-                        <h5>
-                           <a href="course.html">UX/UI Design</a>
-                        </h5>
-                        <p>26 Items</p>
-                     </div>
-                  </div>
-               </div>
-            </div>
+            <Row>
+               <Each
+                  of={daftarMasterBeasiswa}
+                  render={(row) => (
+                     <Col xl={3} lg={4} sm={6}>
+                        <div className="h2_category-item mb-30">
+                           <div className="h2_category-img">
+                              <img data-src={`assets/${h.parse("icon", row)}`} alt={h.parse("nama", row)} className="lozad" />
+                           </div>
+                           <div className="h2_category-content">
+                              <h5>
+                                 <Link to={`/beasiswa/${h.parse("id", row)}`}>{h.parse("nama", row)}</Link>
+                              </h5>
+                              <p>{h.parse("keterangan", row)}</p>
+                           </div>
+                        </div>
+                     </Col>
+                  )}
+               />
+            </Row>
          </Container>
       </section>
    );

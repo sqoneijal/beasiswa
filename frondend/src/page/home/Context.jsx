@@ -1,11 +1,44 @@
-import React from "react";
+import axios from "axios";
+import React, { useLayoutEffect, useState } from "react";
 import { Bars } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { setModule } from "~/redux";
 
 const OpeningPage = React.lazy(() => import("./OpeningPage"));
 const Counter = React.lazy(() => import("./Counter"));
 const ExploreBeasiswa = React.lazy(() => import("./ExploreBeasiswa"));
+const InformasiBeasiswa = React.lazy(() => import("./InformasiBeasiswa"));
+const StickyInformasi = React.lazy(() => import("./StickyInformasi"));
 
 const Context = () => {
+   const { module } = useSelector((e) => e.redux);
+   const dispatch = useDispatch();
+
+   // bool
+   const [isLoading, setIsLoading] = useState(true);
+
+   const initPage = () => {
+      const endpoints = [`${window.apiPath}/master/beasiswa/getdata`];
+
+      axios
+         .all(endpoints.map((endpoint) => axios.get(endpoint)))
+         .then(
+            axios.spread((...res) => {
+               const masterBeasiswa = res[0];
+
+               dispatch(setModule({ ...module, daftarMasterBeasiswa: masterBeasiswa.data }));
+            })
+         )
+         .finally(() => {
+            setIsLoading(false);
+         });
+   };
+
+   useLayoutEffect(() => {
+      initPage();
+      return () => {};
+   }, []);
+
    const loader = (
       <Bars
          visible={true}
@@ -20,11 +53,15 @@ const Context = () => {
       />
    );
 
-   return (
+   return isLoading ? (
+      loader
+   ) : (
       <React.Suspense fallback={loader}>
          <OpeningPage />
          <Counter />
          <ExploreBeasiswa />
+         <InformasiBeasiswa />
+         <StickyInformasi />
       </React.Suspense>
    );
 };

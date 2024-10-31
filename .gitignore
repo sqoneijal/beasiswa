@@ -129,3 +129,5 @@ writable
 app/Config/Database.php
 frondend/node_modules
 app/Config/Database.php
+frondend/bundle
+frondend/build.sh

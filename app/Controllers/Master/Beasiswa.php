@@ -3,12 +3,14 @@
 namespace App\Controllers\Master;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\Master\Beasiswa as Model;
 
 class Beasiswa extends BaseController
 {
-    public function index()
-    {
-        //
-    }
+   public function getData()
+   {
+      $model = new Model();
+      $content = $model->getData();
+      return $this->respond($content);
+   }
 }

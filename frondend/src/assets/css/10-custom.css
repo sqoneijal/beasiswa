@@ -1,0 +1,14 @@
+.h2_category-content h5 {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap; /* Pastikan judul tidak terpotong */
+}
+
+.h2_category-content p {
+   line-height: 1.4em;
+   max-height: 4.2em; /* Batasi teks menjadi 3 baris */
+   overflow: hidden;
+   display: -webkit-box;
+   -webkit-line-clamp: 3; /* Batasi ke 3 baris */
+   -webkit-box-orient: vertical;
+}

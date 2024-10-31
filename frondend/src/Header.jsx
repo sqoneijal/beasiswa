@@ -1,12 +1,17 @@
 import lozad from "lozad";
 import React, { useLayoutEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import logo from "~/assets/img/logo_uin.svg";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
+import { setModule } from "~/redux";
 
 const Header = () => {
+   const { init } = useSelector((e) => e.redux);
+   const dispatch = useDispatch();
+
    useLayoutEffect(() => {
       lozad().observe();
       return () => {};
@@ -18,6 +23,17 @@ const Header = () => {
       { label: "Informasi", pathname: "/informasi" },
    ];
 
+   const clearRedux = () => {
+      dispatch(setModule({}));
+   };
+
+   const handleLogout = () => {
+      const logoutUrl = `https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(
+         location.href
+      )}`;
+      window.location.href = logoutUrl;
+   };
+
    return (
       <header>
          <div className="h2_header-area header-sticky">
@@ -26,7 +42,7 @@ const Header = () => {
                   <Col xl={3} sm={7} className="col-6">
                      <div className="h2_header-left">
                         <div className="h2_header-logo">
-                           <Link to="/">
+                           <Link to="/" onClick={clearRedux}>
                               <img className="lozad" data-src={logo} alt="beasiswa uin ar-raniry" style={{ width: 132, height: 44 }} />
                            </Link>
                         </div>
@@ -40,7 +56,9 @@ const Header = () => {
                                  of={menuList}
                                  render={(row) => (
                                     <li>
-                                       <Link to={h.parse("pathname", row)}>{h.parse("label", row)}</Link>
+                                       <Link to={h.parse("pathname", row)} onClick={clearRedux}>
+                                          {h.parse("label", row)}
+                                       </Link>
                                     </li>
                                  )}
                               />
@@ -51,9 +69,24 @@ const Header = () => {
                   <Col xl={3} sm={5} className="col-6">
                      <div className="h2_header-right">
                         <div className="h2_header-btn d-none d-sm-block">
-                           <a href="#" className="header-btn theme-btn theme-btn-medium">
-                              Sign Up
-                           </a>
+                           {h.objLength(init) ? (
+                              <React.Fragment>
+                                 <Link to="/profile" className="header-btn theme-btn theme-btn-medium" onClick={clearRedux}>
+                                    Profile
+                                 </Link>
+                                 <a className="header-btn theme-btn theme-btn-medium" href="#" onClick={() => handleLogout()}>
+                                    Logout
+                                 </a>
+                              </React.Fragment>
+                           ) : (
+                              <a
+                                 className="header-btn theme-btn theme-btn-medium"
+                                 href={`https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/auth?client_id=${
+                                    sso.clientId
+                                 }&redirect_uri=${encodeURIComponent(location.href)}&response_mode=fragment&response_type=code&scope=openid`}>
+                                 Login
+                              </a>
+                           )}
                         </div>
                         <div className="header-menu-bar d-xl-none ml-10">
                            <span className="header-menu-bar-icon side-toggle">

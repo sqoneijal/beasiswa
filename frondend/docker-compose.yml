@@ -1,0 +1,10 @@
+services:
+   beasiswa-frontend:
+      container_name: beasiswa-frontend
+      build:
+         dockerfile: ./Dockerfile
+      ports:
+         - 1007:80
+      volumes:
+         - ./:/var/www/html
+      restart: always
