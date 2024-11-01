@@ -73,9 +73,9 @@ const Header = () => {
                            {h.objLength(init) ? (
                               <React.Fragment>
                                  {init.roleAdmin && (
-                                    <Link to="/controlpanel" className="header-btn theme-btn theme-btn-medium" onClick={clearRedux}>
+                                    <a href="/controlpanel" className="header-btn theme-btn theme-btn-medium">
                                        Control Panel
-                                    </Link>
+                                    </a>
                                  )}
                                  {init.roleMahasiswa && (
                                     <Link to="/profile" className="header-btn theme-btn theme-btn-medium" onClick={clearRedux}>
