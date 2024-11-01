@@ -9,6 +9,10 @@ import * as h from "~/Helpers";
 import { setInit } from "~/redux";
 import redux from "./redux";
 
+const Header = React.lazy(() => import("./Header"));
+const Routing = React.lazy(() => import("./Routing"));
+const Footer = React.lazy(() => import("./Footer"));
+
 import "./assets/css/01-bootstrap.css";
 import "./assets/css/02-animate.css";
 import "./assets/css/03-magnific-popup.css";
@@ -19,10 +23,6 @@ import "./assets/css/07-swiper-bundle.css";
 import "./assets/css/08-main.css";
 import "./assets/css/09-toastr.css";
 import "./assets/css/10-custom.css";
-
-const Header = React.lazy(() => import("./Header"));
-const Routing = React.lazy(() => import("./Routing"));
-const Footer = React.lazy(() => import("./Footer"));
 
 const App = () => {
    const dispatch = useDispatch();
@@ -120,10 +120,14 @@ const App = () => {
       />
    );
 
-   return isLoading ? (
-      loader
-   ) : pathname === "controlpanel" ? (
-      ""
+   if (isLoading) {
+      return loader;
+   }
+
+   return pathname === "controlpanel" ? (
+      <React.Suspense fallback={loader}>
+         <div>admin</div>
+      </React.Suspense>
    ) : (
       <React.Suspense fallback={loader}>
          <Header />
