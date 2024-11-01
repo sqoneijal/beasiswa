@@ -7,6 +7,15 @@ $routes = service('routes');
  */
 $routes->get('/', 'Home::index');
 
+function user($routes): void
+{
+   $routes->post('getdata', 'User::getData');
+}
+
+$routes->group('user', function ($routes) {
+   user($routes);
+});
+
 function masterBeasiswa($routes): void
 {
    $routes->group('beasiswa', function ($routes) {

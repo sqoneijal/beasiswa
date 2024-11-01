@@ -127,7 +127,7 @@ nb-configuration.xml
 
 writable
 app/Config/Database.php
-frondend/node_modules
+interface/node_modules
 app/Config/Database.php
-frondend/bundle
-frondend/build.sh
+interface/bundle
+interface/build.sh
