@@ -14,9 +14,9 @@ const Context = () => {
    useLayoutEffect(() => {
       if (!h.objLength(init)) {
          window.open(
-            `https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/auth?client_id=beasiswa.local&redirect_uri=${encodeURIComponent(
-               location.href
-            )}&response_mode=fragment&response_type=code&scope=openid`,
+            `https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/auth?client_id=${
+               sso.clientId
+            }&redirect_uri=${encodeURIComponent(location.href)}&response_mode=fragment&response_type=code&scope=openid`,
             "_parent"
          );
       }

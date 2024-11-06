@@ -20,6 +20,19 @@ class Sevima
       ]);
    }
 
+   public function getPeriode(): array
+   {
+      $req = $this->curl->request('GET', 'periode');
+      $body = json_decode($req->getBody(), true);
+
+      $results = [];
+      foreach ($body['data'] as $row) {
+         $results[] = $row['attributes'];
+      }
+
+      return $results;
+   }
+
    public function getBiodataMahasiswa(string $nim): array
    {
       $req = $this->curl->request('GET', 'mahasiswa/' . $nim);

@@ -1,0 +1,10 @@
+services:
+   beasiswa-controlpanel:
+      container_name: beasiswa-controlpanel
+      build:
+         dockerfile: ./Dockerfile
+      ports:
+         - 1008:80
+      volumes:
+         - ./:/var/www/html
+      restart: always

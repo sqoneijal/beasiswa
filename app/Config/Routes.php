@@ -2,10 +2,36 @@
 
 $routes = service('routes');
 
-/**
- * @var RouteCollection $routes
- */
-$routes->get('/', 'Home::index');
+function periode($routes): void
+{
+   $routes->group('periode', function ($routes) {
+      $routes->post('getdata', 'Periode::getData');
+   });
+}
+periode($routes);
+
+function referensiKategoriBeasiswa($routes): void
+{
+   $routes->group('kategoribeasiswa', function ($routes) {
+      $routes->post('getdata', 'KategoriBeasiswa::getData');
+      $routes->post('submit', 'KategoriBeasiswa::submit');
+      $routes->post('hapus', 'KategoriBeasiswa::hapus');
+   });
+}
+
+function referensiLampiranUpload($routes): void
+{
+   $routes->group('lampiranupload', function ($routes) {
+      $routes->post('getdata', 'LampiranUpload::getData');
+      $routes->post('submit', 'LampiranUpload::submit');
+      $routes->post('hapus', 'LampiranUpload::hapus');
+   });
+}
+
+$routes->group('referensi', ['namespace' => 'App\Controllers\Referensi'], function ($routes) {
+   referensiKategoriBeasiswa($routes);
+   referensiLampiranUpload($routes);
+});
 
 function user($routes): void
 {
