@@ -1,12 +1,16 @@
 import axios from "axios";
 import DataTables from "datatables.net";
 import $ from "jquery";
-import lozad from "lozad";
 import React from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { Typeahead } from "react-bootstrap-typeahead";
+import Flatpickr from "react-flatpickr";
 import Swal from "sweetalert2";
 import toastr from "toastr";
 import { uid } from "uid/secure";
+import { Each } from "./Each";
+
+let dt;
 
 export const parse = (key, content = {}, type = "text") => {
    if (typeof content[key] === "undefined") {
@@ -299,155 +303,6 @@ export const serialize = (obj) => {
    return str.join("&");
 };
 
-export const initDatatable = ({ ...content }) => {
-   return {
-      reload: () => {
-         dt.ajax.reload(null, false);
-      },
-      init: () => {
-         DatatableServerSide(content);
-      },
-   };
-};
-
-let dt;
-const DatatableServerSide = ({ ...content }) => {
-   const renderColumnDefs = [
-      {
-         targets: -1,
-         data: null,
-         orderable: false,
-         className: "text-end",
-         width: "5%",
-         render: () => renderButtons(content),
-      },
-   ];
-
-   DataTables.defaults = {
-      ...DataTables.defaults,
-      renderer: "bootstrap",
-   };
-
-   DataTables.ext.classes = {
-      ...DataTables.ext.classes,
-      container: "dataTables_wrapper dt-bootstrap4 no-footer",
-      empty: { row: "dataTables_empty" },
-      length: { container: "dataTables_length", select: "form-select form-select-sm form-select-solid" },
-      info: { container: "dataTables_info" },
-   };
-
-   DataTables.ext.renderer.pagingContainer.bootstrap = renderPagingContainer;
-
-   DataTables.ext.renderer.pagingButton.bootstrap = renderPagingButton;
-
-   dt = new DataTables(`${parse("id", content) ? parse("id", content) : "#datatable"}`, {
-      processing: true,
-      serverSide: true,
-      pageLength: 10,
-      ajax: {
-         url: `${window.apiPath}${content.url}`,
-         data: (e) => {
-            return $.extend({}, e, content.filter);
-         },
-         type: "post",
-         error: handleError,
-      },
-      columns: content.columns,
-      columnDefs: content.columnDefs ? renderColumnDefs : [],
-      language: getLanguage(),
-      order: content.order,
-      initComplete: initializeComplete,
-      drawCallback,
-      createdRow: content.createdRow,
-      dom: getDom(),
-   });
-};
-
-const renderButtons = (content) => {
-   let button_render = "";
-   if (parse("custom_button", content)) button_render += parse("custom_button", content);
-   if (content.show_edit_button)
-      button_render +=
-         '<a href="#" id="edit" class="btn btn-active-icon-warning btn-active-text-warning btn-sm p-0 m-0"><i class="ki-outline ki-notepad-edit fs-1"></i></a>';
-   if (content.show_delete_button)
-      button_render +=
-         '<a href="#" id="delete" class="btn btn-active-icon-danger btn-active-text-danger btn-sm p-0 m-0"><i class="ki-outline ki-trash-square fs-1"></i></a>';
-
-   return button_render;
-};
-
-function getLanguage() {
-   return {
-      processing: '<div class="d-flex flex-column flex-center"><span class="text-gray-600">Loading...</span></div>',
-      emptyTable: "No data available in table",
-      info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-      infoEmpty: "Tidak ada data untuk ditampilkan",
-      infoFiltered: "(disaring dari _MAX_ data keseluruhan)",
-      zeroRecords: "Tidak ditemukan data yang sesuai",
-      thousands: ".",
-      infoThousands: ".",
-      lengthMenu: "_MENU_",
-      paginate: {
-         first: '<i class="first"></i>',
-         last: '<i class="last"></i>',
-         next: '<i class="next"></i>',
-         previous: '<i class="previous"></i>',
-      },
-   };
-}
-
-function getDom() {
-   return (
-      "<'table-responsive'tr>" +
-      "<'row'" +
-      "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start dt-toolbar'li>" +
-      "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-      ">"
-   );
-}
-
-function renderPagingContainer(settings, buttonEls) {
-   return $("<ul/>").addClass("pagination").append(buttonEls);
-}
-
-function renderPagingButton(settings, buttonType, content, active, disabled) {
-   const btnClasses = ["paginate_button", "page-item"];
-
-   if (active) {
-      btnClasses.push("active");
-   }
-
-   if (disabled) {
-      btnClasses.push("disabled");
-   }
-
-   const li = $("<li>").addClass(btnClasses.join(" "));
-   const a = $("<a>", {
-      href: disabled ? null : "#",
-      class: "page-link",
-   })
-      .html(content)
-      .appendTo(li);
-
-   return {
-      display: li,
-      clicker: a,
-   };
-}
-
-function handleError(xhr) {
-   if (xhr) notification(false, xhr.statusText);
-}
-
-function initializeComplete(e) {
-   lozad().observe();
-}
-
-function drawCallback(settings) {
-   lozad().observe();
-   $(settings.nTBody).find(".dataTables_empty").html("Tidak ada data yang tersedia pada tabel ini");
-}
-
 export const table_loading = (colSpan = 0) => {
    return (
       <tr>
@@ -504,6 +359,67 @@ export const form_text = (label, name, labelSize = 2, config = {}, errors = {}) 
    );
 };
 
+export const form_select = (label, name, labelSize = 2, options = [], config = {}, errors = {}) => {
+   const uniqueID = `${name}_${uid(32)}`;
+
+   return (
+      <Row className="mb-6">
+         <label className={`col-sm-${labelSize} col-form-label`} htmlFor={uniqueID}>
+            {label}
+         </label>
+         <Col sm={12 - labelSize}>
+            <Form.Control as="select" id={uniqueID} placeholder={label} {...config} isInvalid={is_invalid(name, errors)}>
+               <option value="">--pilih--</option>
+               {arrLength(options) > 0 && <Each of={options} render={(row) => <option value={parse("value", row)}>{parse("label", row)}</option>} />}
+            </Form.Control>
+            {msg_response(name, errors)}
+         </Col>
+      </Row>
+   );
+};
+
+export const form_multiple = (label, name, labelSize = 2, config = {}, errors = {}) => {
+   const uniqueID = `${name}_${uid(32)}`;
+
+   return (
+      <Row className="mb-6">
+         <label className={`col-sm-${labelSize} col-form-label`} htmlFor={uniqueID}>
+            {label}
+         </label>
+         <Col sm={12 - labelSize}>
+            <Typeahead
+               id={uniqueID}
+               labelKey={name}
+               multiple
+               // onChange={setMultiSelections}
+               // options={options}
+               placeholder={label}
+               // selected={multiSelections}
+               {...config}
+               isInvalid={is_invalid(name, errors)}
+            />
+            {msg_response(name, errors)}
+         </Col>
+      </Row>
+   );
+};
+
+export const date_picker = (label, name, labelSize = 2, config = {}, errors = {}) => {
+   const uniqueID = `${name}_${uid(32)}`;
+
+   return (
+      <Row className="mb-6">
+         <label className={`col-sm-${labelSize} col-form-label`} htmlFor={uniqueID}>
+            {label}
+         </label>
+         <Col sm={12 - labelSize}>
+            <Flatpickr className={`form-control ${is_invalid(name, errors) ? "is-invalid" : ""}`} placeholder={label} id={uniqueID} {...config} />
+            {msg_response(name, errors)}
+         </Col>
+      </Row>
+   );
+};
+
 export const form_textarea = (label, name, labelSize = 2, config = {}, errors = {}) => {
    const uniqueID = `${uid(32)}`;
 
@@ -520,7 +436,7 @@ export const form_textarea = (label, name, labelSize = 2, config = {}, errors = 
    );
 };
 
-export const save_button = (button, col = 10) => {
+export const save_button = (button, col = 12) => {
    return (
       <Row className="justify-content-end">
          <div className={`col-sm-${col}`}>{button}</div>
@@ -565,4 +481,147 @@ const hapus = async (url, id, custom = {}) => {
    } catch (e) {
       notification(false, e.code, e.message);
    }
+};
+
+function handleError(xhr) {
+   if (xhr) notification(false, xhr.statusText);
+}
+
+const DatatableServerSide = ({ ...content }) => {
+   const renderColumnDefs = [
+      {
+         targets: -1,
+         data: null,
+         orderable: false,
+         className: "text-end",
+         width: "5%",
+         render: () => renderDTActionButtons(),
+      },
+   ];
+
+   DataTables.defaults = {
+      ...DataTables.defaults,
+      renderer: "bootstrap",
+   };
+
+   DataTables.ext.classes = {
+      ...DataTables.ext.classes,
+      container: "dataTables_wrapper dt-bootstrap5 no-footer",
+      length: {
+         container: "dataTables_length",
+         select: "form-select",
+      },
+      search: {
+         container: "dataTables_filter",
+         input: "form-control",
+      },
+      info: {
+         container: "dataTables_info ms-n1",
+      },
+      empty: {
+         row: "dataTables_empty",
+      },
+      paging: {
+         container: "dataTables_paginate paging_simple_numbers me-n1",
+      },
+   };
+
+   DataTables.ext.renderer.pagingButton.bootstrap = (settings, buttonType, content, active, disabled) => {
+      const btnClasses = ["paginate_button", "page-item"];
+
+      if (active) {
+         btnClasses.push("active");
+      }
+
+      if (disabled) {
+         btnClasses.push("disabled");
+      }
+
+      const li = $("<li>").addClass(btnClasses.join(" "));
+      const a = $("<a>", {
+         class: "page-link",
+         role: "link",
+         type: "button",
+      })
+         .html(content)
+         .appendTo(li);
+
+      return {
+         display: li,
+         clicker: a,
+      };
+   };
+
+   dt = new DataTables("#datatable", {
+      processing: true,
+      serverSide: true,
+      pageLength: 10,
+      ajax: {
+         url: `${window.apiPath}${content.url}`,
+         data: (e) => {
+            return $.extend({}, e, content.filter);
+         },
+         type: "post",
+         error: handleError,
+      },
+      columns: content.columns,
+      order: content.order,
+      columnDefs: content.columnDefs ? renderColumnDefs : [],
+      dom: getDom(),
+      language: {
+         sLengthMenu: "Show _MENU_",
+         search: "",
+         searchPlaceholder: "Cari...",
+         paginate: {
+            next: '<i class="ti ti-chevron-right ti-sm"></i>',
+            previous: '<i class="ti ti-chevron-left ti-sm"></i>',
+         },
+      },
+      buttons: [
+         {
+            text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Add new role</span>',
+            className: "btn btn-primary waves-effect waves-light rounded border-left-0 border-right-0",
+            attr: { "data-bs-toggle": "modal", "data-bs-target": "#addRoleModal" },
+         },
+      ],
+      createdRow: (row, data) => {
+         if (row) {
+            for (let i = 0; i < row.cells.length; i++) {
+               if (i === 0) {
+                  row.cells[i].innerHTML = `<span class="text-nowrap text-heading">${row.cells[i].innerHTML}</span>`;
+               } else {
+                  row.cells[i].innerHTML = `<span class="text-nowrap">${row.cells[i].innerHTML}</span>`;
+               }
+            }
+         }
+      },
+   });
+};
+
+const getDom = () => {
+   return '<"row mx-1"<"col-sm-12 col-md-3" l><"col-sm-12 col-md-9"<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-md-end justify-content-center flex-wrap"<"me-4 mt-n6 mt-md-0"f>B>>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>';
+};
+
+const renderDTActionButtons = () => {
+   let html = `<div class="d-flex align-items-center">`;
+   html += `<a href="#" id="view" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md"></i></a>`;
+   html += `<a href="#" id="edit" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill delete-record"><i class="ti ti-edit ti-md"></i></a>`;
+   html += `<a href="#" id="delete" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill delete-record"><i class="ti ti-trash ti-md"></i></a>`;
+   html += `</div>`;
+   return html;
+};
+
+export const initDatatable = ({ ...content }) => {
+   return {
+      reload: () => {
+         dt.ajax.reload(null, false);
+      },
+      init: () => {
+         DatatableServerSide(content);
+      },
+   };
+};
+
+export const arrLength = (content = []) => {
+   return content.length > 0;
 };

@@ -19,8 +19,8 @@ class Common extends Model
 
    public function datatableColumnOrder($table, $column_order = []): void
    {
-      $column = @$_POST['column'];
-      $dir = @$_POST['dir'];
+      $column = @$_POST['order'][0]['column'];
+      $dir = @$_POST['order'][0]['dir'];
       $table->orderBy($column_order[$column], $dir);
    }
 
@@ -28,12 +28,12 @@ class Common extends Model
    {
       $i = 0;
       foreach ($column_search as $item) {
-         if (@$_POST['value']) {
+         if (@$_POST['search']['value']) {
             if ($i === 0) {
                $table->groupStart();
-               $table->like('trim(lower(cast(' . $item . ' as varchar)))', trim(strtolower($_POST['value'])));
+               $table->like('trim(lower(cast(' . $item . ' as varchar)))', trim(strtolower($_POST['search']['value'])));
             } else {
-               $table->orLike('trim(lower(cast(' . $item . ' as varchar)))', trim(strtolower($_POST['value'])));
+               $table->orLike('trim(lower(cast(' . $item . ' as varchar)))', trim(strtolower($_POST['search']['value'])));
             }
 
             if (count($column_search) - 1 === $i) {

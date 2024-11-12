@@ -10,6 +10,9 @@ import * as h from "~/Helpers";
 import { setInit } from "~/redux";
 import redux from "./redux";
 
+import "datatables.net-bs5/css/dataTables.bootstrap5.css";
+import "datatables.net-buttons-bs5/css/buttons.bootstrap5.css";
+import "datatables.net-responsive-bs5/css/responsive.bootstrap5.css";
 import "~/assets/css/01-fontawesome.css";
 import "~/assets/css/02-tabler-icons.css";
 import "~/assets/css/03-core.css";
@@ -18,6 +21,9 @@ import "~/assets/css/05-node-waves.css";
 import "~/assets/css/06-perfect-scrollbar.css";
 import "~/assets/css/07-custom.css";
 import "~/assets/css/08-toastr.css";
+import "~/assets/css/09-flatpickr.css";
+import "~/assets/css/10-Typeahead.css";
+import "~/assets/css/11-Typeahead.bs5.css";
 
 const Menu = React.lazy(() => import("./Menu"));
 const Routing = React.lazy(() => import("./Routing"));

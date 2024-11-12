@@ -2,6 +2,15 @@
 
 $routes = service('routes');
 
+function generateBeasiswa($routes): void
+{
+   $routes->group('generatebeasiswa', function ($routes) {
+      $routes->post('submit', 'GenerateBeasiswa::submit');
+      $routes->post('getdata', 'GenerateBeasiswa::getData');
+   });
+}
+generateBeasiswa($routes);
+
 function periode($routes): void
 {
    $routes->group('periode', function ($routes) {
