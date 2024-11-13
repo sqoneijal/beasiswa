@@ -7,6 +7,7 @@ function generateBeasiswa($routes): void
    $routes->group('generatebeasiswa', function ($routes) {
       $routes->post('submit', 'GenerateBeasiswa::submit');
       $routes->post('getdata', 'GenerateBeasiswa::getData');
+      $routes->post('hapus', 'GenerateBeasiswa::hapus');
    });
 }
 generateBeasiswa($routes);

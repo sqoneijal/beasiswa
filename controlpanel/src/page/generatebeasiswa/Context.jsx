@@ -7,6 +7,7 @@ import { setModule } from "~/redux";
 
 const Lists = React.lazy(() => import("./Lists"));
 const Forms = React.lazy(() => import("./Forms"));
+const ModalDetail = React.lazy(() => import("./ModalDetail"));
 
 const Context = ({ setPageTypeButton }) => {
    const { module } = useSelector((e) => e.redux);
@@ -22,9 +23,6 @@ const Context = ({ setPageTypeButton }) => {
          {
             start: 0,
             length: 100,
-            page: 0,
-            column: 0,
-            dir: "asc",
          },
          {
             headers: {
@@ -40,9 +38,6 @@ const Context = ({ setPageTypeButton }) => {
          {
             start: 0,
             length: 100,
-            page: 0,
-            column: 0,
-            dir: "asc",
          },
          {
             headers: {
@@ -99,6 +94,7 @@ const Context = ({ setPageTypeButton }) => {
       loader
    ) : (
       <React.Suspense fallback={loader}>
+         <ModalDetail />
          <Row>
             <Col>
                <Card>

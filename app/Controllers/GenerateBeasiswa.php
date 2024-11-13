@@ -8,6 +8,24 @@ use App\Models\GenerateBeasiswa as Model;
 
 class GenerateBeasiswa extends BaseController
 {
+
+   public function hapus(): object
+   {
+      $response = ['status' => false, 'errors' => []];
+
+      $validation = new Validate();
+      if ($this->validate($validation->hapus())) {
+         $model = new Model();
+         $submit = $model->hapus($this->post);
+
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
+   }
+
    public function submit()
    {
       $response = ['status' => false, 'errors' => []];

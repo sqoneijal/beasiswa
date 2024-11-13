@@ -19,8 +19,14 @@ class Common extends Model
 
    public function datatableColumnOrder($table, $column_order = []): void
    {
-      $column = @$_POST['order'][0]['column'];
-      $dir = @$_POST['order'][0]['dir'];
+      if (isset($_POST['order'])) {
+         $column = @$_POST['order'][0]['column'];
+         $dir = @$_POST['order'][0]['dir'];
+      } else {
+         $column = 0;
+         $dir = 'asc';
+      }
+
       $table->orderBy($column_order[$column], $dir);
    }
 

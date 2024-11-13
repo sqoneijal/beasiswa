@@ -565,7 +565,7 @@ const DatatableServerSide = ({ ...content }) => {
          error: handleError,
       },
       columns: content.columns,
-      order: content.order,
+      order: content.order?.content.order,
       columnDefs: content.columnDefs ? renderColumnDefs : [],
       dom: getDom(),
       language: {
@@ -575,26 +575,11 @@ const DatatableServerSide = ({ ...content }) => {
          paginate: {
             next: '<i class="ti ti-chevron-right ti-sm"></i>',
             previous: '<i class="ti ti-chevron-left ti-sm"></i>',
+            last: '<i class="ti ti-chevrons-right ti-sm"></i>',
+            first: '<i class="ti ti-chevrons-left ti-sm"></i>',
          },
       },
-      buttons: [
-         {
-            text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Add new role</span>',
-            className: "btn btn-primary waves-effect waves-light rounded border-left-0 border-right-0",
-            attr: { "data-bs-toggle": "modal", "data-bs-target": "#addRoleModal" },
-         },
-      ],
-      createdRow: (row, data) => {
-         if (row) {
-            for (let i = 0; i < row.cells.length; i++) {
-               if (i === 0) {
-                  row.cells[i].innerHTML = `<span class="text-nowrap text-heading">${row.cells[i].innerHTML}</span>`;
-               } else {
-                  row.cells[i].innerHTML = `<span class="text-nowrap">${row.cells[i].innerHTML}</span>`;
-               }
-            }
-         }
-      },
+      createdRow: content.createdRow,
    });
 };
 
@@ -605,8 +590,8 @@ const getDom = () => {
 const renderDTActionButtons = () => {
    let html = `<div class="d-flex align-items-center">`;
    html += `<a href="#" id="view" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md"></i></a>`;
-   html += `<a href="#" id="edit" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill delete-record"><i class="ti ti-edit ti-md"></i></a>`;
-   html += `<a href="#" id="delete" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill delete-record"><i class="ti ti-trash ti-md"></i></a>`;
+   html += `<a href="#" id="edit" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-edit ti-md"></i></a>`;
+   html += `<a href="#" id="delete" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md"></i></a>`;
    html += `</div>`;
    return html;
 };

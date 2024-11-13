@@ -4,6 +4,17 @@ namespace App\Validation;
 
 class GenerateBeasiswa
 {
+
+   public function hapus(): array
+   {
+      return [
+         'id' => [
+            'rules' => 'required|numeric',
+            'label' => 'ID generate beasiswa'
+         ]
+      ];
+   }
+
    public function submit(array $post): array
    {
       return [

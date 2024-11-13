@@ -10,9 +10,9 @@ build({
    format: "esm", // Output format: ES modules
    minify: true,
    sourcemap: "external",
-   inject: ["./src/assets/js/node-waves.js"],
+   inject: ["./src/assets/js/node-waves.js", "./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.js"],
    alias: {
-      "~": "./src",
+      "~": path.resolve(__dirname, "src"),
    },
    jsxSideEffects: true,
    splitting: true,

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 const Lists = React.lazy(() => import("./Lists"));
 const Forms = React.lazy(() => import("./Forms"));
+const DetailModal = React.lazy(() => import("./DetailModal"));
 
 const Context = ({ setPageTypeButton }) => {
    const { module } = useSelector((e) => e.redux);
@@ -28,10 +29,17 @@ const Context = ({ setPageTypeButton }) => {
 
    return (
       <React.Suspense fallback={loader}>
+         <DetailModal />
          <Row>
             <Col>
                <Card className="shadow-sm">
-                  <Card.Body>{pageType === "add" || pageType === "update" ? <Forms {...props} /> : <Lists {...props} />}</Card.Body>
+                  {pageType === "add" || pageType === "update" ? (
+                     <Card.Body>
+                        <Forms {...props} />
+                     </Card.Body>
+                  ) : (
+                     <Lists {...props} />
+                  )}
                </Card>
             </Col>
          </Row>

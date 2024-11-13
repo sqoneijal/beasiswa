@@ -7,7 +7,7 @@ import { setModule } from "~/redux";
 
 const Forms = ({ setPageTypeButton }) => {
    const { module, init } = useSelector((e) => e.redux);
-   const { pageType, kategoriBeasiswa, lampiranUpload, periode } = module;
+   const { pageType, kategoriBeasiswa, lampiranUpload, periode, detailContent } = module;
    const dispatch = useDispatch();
 
    // bool
@@ -21,10 +21,35 @@ const Forms = ({ setPageTypeButton }) => {
    const [selectedAngkatan, setSelectedAngkatan] = useState([]);
    const [selectedLampiranUpload, setSelectedLampiranUpload] = useState([]);
 
+   useLayoutEffect(() => {
+      if (pageType === "update" && h.objLength(detailContent)) {
+         const parseAngkatan = JSON.parse(h.parse("angkatan", detailContent));
+         const parseLampiranUpload = JSON.parse(h.parse("lampiran_upload", detailContent));
+
+         setInput({
+            id: h.parse("id", detailContent),
+            tanggal_mulai: h.parse("tanggal_mulai", detailContent),
+            tanggal_akhir: h.parse("tanggal_akhir", detailContent),
+            wajib_ipk: h.parse("wajib_ipk", detailContent),
+            minimal_ipk: h.parse("minimal_ipk", detailContent),
+            maksimal_ipk: h.parse("maksimal_ipk", detailContent),
+            id_kategori_beasiswa: h.parse("id_kategori_beasiswa", detailContent),
+         });
+
+         const angkatan = [];
+         parseAngkatan.forEach((value) => angkatan.push({ id: value, label: value.toString() }));
+         setSelectedAngkatan(angkatan);
+         setSelectedLampiranUpload(parseLampiranUpload);
+      }
+      return () => {};
+   }, [pageType, detailContent]);
+
    const clearProps = () => {
       setInput({});
       setErrors({});
       setIsSubmit(false);
+      setSelectedAngkatan([]);
+      setSelectedLampiranUpload([]);
       dispatch(setModule({ ...module, pageType: "", detailContent: {} }));
    };
 
@@ -147,6 +172,7 @@ const Forms = ({ setPageTypeButton }) => {
                   ],
                   {
                      onChange: (e) => setInput((prev) => ({ ...prev, wajib_ipk: e.target.value })),
+                     value: h.parse("wajib_ipk", input),
                   },
                   errors
                )}

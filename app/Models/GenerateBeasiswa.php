@@ -7,6 +7,19 @@ use CodeIgniter\Database\RawSql;
 class GenerateBeasiswa extends Common
 {
 
+   public function hapus(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_generate_beasiswa');
+         $table->where('id', $post['id']);
+         $table->delete();
+
+         return ['status' => true, 'content' => '', 'msg_response' => 'Data berhasil dihapus.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
    public function submit(array $post): array
    {
       try {
@@ -40,6 +53,9 @@ class GenerateBeasiswa extends Common
             $data['modified'] = new RawSql('now()');
 
             $table->update($data, ['id' => $post['id']]);
+
+            $this->generateAngkatanBeasiswa($post['id'], $post['angkatan']);
+            $this->generateLampiranUpload($post['id'], $post['lampiran_upload']);
          }
          return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
@@ -144,12 +160,16 @@ class GenerateBeasiswa extends Common
    private function queryData()
    {
       $table = $this->db->table('tb_generate_beasiswa tgb');
-      $table->select('tgb.id, tgb.periode, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as kategori_beasiswa, tab.angkatan');
+      $table->select('tgb.*, tmjb.nama as kategori_beasiswa, coalesce(tab.angkatan, \'[]\') as angkatan, coalesce(tlu.lampiran_upload, \'[]\') as lampiran_upload');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
-      $table->join('(select id_generate_beasiswa, array_agg(angkatan) as angkatan from tb_angkatan_beasiswa group by id_generate_beasiswa) tab', 'tab.id_generate_beasiswa = tgb.id', 'left');
+      $table->join('(select id_generate_beasiswa, json_agg(angkatan) as angkatan from tb_angkatan_beasiswa group by id_generate_beasiswa) tab', 'tab.id_generate_beasiswa = tgb.id', 'left');
+      $table->join('(select tlu.id_generate_beasiswa, json_agg(json_build_object(\'id\', tlu.id_lampiran_upload,     \'label\', tmlu.nama)) as lampiran_upload
+      from tb_lampiran_upload tlu
+      join tb_mst_lampiran_upload tmlu on tmlu.id = tlu.id_lampiran_upload
+      group by tlu.id_generate_beasiswa) tlu', 'tlu.id_generate_beasiswa = tgb.id', 'left');
 
       $this->datatableColumnSearch($table, ['tmjb.nama']);
-      $this->datatableColumnOrder($table, ['kategori_beasiswa']);
+      $this->datatableColumnOrder($table, ['kategori_beasiswa', 'tanggal_mulai', 'tanggal_akhir', 'periode']);
 
       return $table;
    }
