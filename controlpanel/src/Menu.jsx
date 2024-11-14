@@ -50,6 +50,12 @@ const Menu = ({ setPageTypeButton }) => {
             },
          ],
       },
+      {
+         label: "Berita",
+         pathname: "/berita",
+         icon: "menu-icon tf-icons ti ti-receipt",
+         sub: false,
+      },
       { label: "Generate Beasiswa", pathname: "/generatebeasiswa", icon: "menu-icon tf-icons ti ti-smart-home", sub: false },
       {
          label: "Beasiswa",

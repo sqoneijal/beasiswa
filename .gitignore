@@ -136,3 +136,4 @@ frontend/build.sh
 controlpanel/node_modules
 controlpanel/bundle
 controlpanel/build.sh
+controlpanel/assets/tinymce

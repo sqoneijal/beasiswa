@@ -436,9 +436,9 @@ export const form_textarea = (label, name, labelSize = 2, config = {}, errors = 
    );
 };
 
-export const save_button = (button, col = 12) => {
+export const save_button = (button, col = 12, mt = 0) => {
    return (
-      <Row className="justify-content-end">
+      <Row className={`justify-content-end mt-${mt}`}>
          <div className={`col-sm-${col}`}>{button}</div>
       </Row>
    );
