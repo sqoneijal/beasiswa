@@ -3,10 +3,10 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Validation\Berita as Validate;
-use App\Models\Berita as Model;
+use App\Validation\Informasi as Validate;
+use App\Models\Informasi as Model;
 
-class Berita extends BaseController
+class Informasi extends BaseController
 {
 
    public function submit()

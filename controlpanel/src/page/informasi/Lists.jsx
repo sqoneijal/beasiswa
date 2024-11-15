@@ -12,7 +12,7 @@ const Lists = ({ setPageTypeButton }) => {
    const { module } = useSelector((e) => e.redux);
    const dispatch = useDispatch();
 
-   const datatable_url = `/berita/getdata`;
+   const datatable_url = `/informasi/getdata`;
    datatable = h.initDatatable({
       show_edit_button: true,
       show_delete_button: true,
@@ -34,7 +34,7 @@ const Lists = ({ setPageTypeButton }) => {
          if (_view) {
             _view.onclick = (e) => {
                e.preventDefault();
-               window.open(`/berita/read/${h.parse("slug", data)}`, "_blank");
+               window.open(`/informasi/read/${h.parse("slug", data)}`, "_blank");
             };
          }
 
@@ -51,7 +51,7 @@ const Lists = ({ setPageTypeButton }) => {
             _delete.onclick = (e) => {
                e.preventDefault();
                h.confirmDelete({
-                  url: "/berita/hapus",
+                  url: "/informasi/hapus",
                   id: data.id,
                }).then((res) => {
                   if (typeof res === "undefined") return;
@@ -67,7 +67,7 @@ const Lists = ({ setPageTypeButton }) => {
    useLayoutEffect(() => {
       datatable.init();
       setPageTypeButton(
-         h.buttons(`Tambah Berita`, false, {
+         h.buttons(`Tambah Informasi`, false, {
             onClick: () => dispatch(setModule({ ...module, pageType: "add" })),
          })
       );

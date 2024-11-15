@@ -61,7 +61,7 @@ const Forms = ({ setPageTypeButton }) => {
       Object.keys(input).forEach((key) => (formData[key] = input[key]));
 
       setIsSubmit(true);
-      const fetch = h.post(`/berita/submit`, formData);
+      const fetch = h.post(`/informasi/submit`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 

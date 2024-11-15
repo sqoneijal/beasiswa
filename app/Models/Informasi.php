@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Database\RawSql;
 
-class Berita extends Common
+class Informasi extends Common
 {
 
    public function hapus(array $post): array

@@ -51,8 +51,8 @@ const Menu = ({ setPageTypeButton }) => {
          ],
       },
       {
-         label: "Berita",
-         pathname: "/berita",
+         label: "Informasi",
+         pathname: "/informasi",
          icon: "menu-icon tf-icons ti ti-receipt",
          sub: false,
       },

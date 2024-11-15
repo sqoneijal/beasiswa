@@ -3,8 +3,8 @@
    "version": "1.0.0",
    "main": "index.js",
    "scripts": {
-      "dev": "pre-dev.sh && esbuild --define:process.env.NODE_ENV=\\\"development\\\" ./src/App.jsx --bundle --watch --alias:~=./src/ --outdir=./bundle --loader:.svg=dataurl --loader:.webp=dataurl --loader:.eot=copy --loader:.png=dataurl --loader:.jpg=copy --loader:.woff=copy --loader:.woff2=copy --loader:.ttf=copy --loader:.webp=copy --sourcemap --log-limit=0",
-      "build": "pre-build.sh && esbuild.config.js && build.sh"
+      "dev": "./pre-dev.sh && esbuild --define:process.env.NODE_ENV=\\\"development\\\" ./src/App.jsx --bundle --watch --alias:~=./src/ --outdir=./bundle --loader:.svg=dataurl --loader:.webp=dataurl --loader:.eot=copy --loader:.png=dataurl --loader:.jpg=copy --loader:.woff=copy --loader:.woff2=copy --loader:.ttf=copy --loader:.webp=copy --sourcemap --log-limit=0",
+      "build": "./pre-build.sh && ./esbuild.config.js && ./build.sh"
    },
    "keywords": [],
    "author": "",

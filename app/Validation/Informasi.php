@@ -2,14 +2,14 @@
 
 namespace App\Validation;
 
-class Berita
+class Informasi
 {
    public function submit(): array
    {
       return [
          'judul' => [
             'rules' => 'required',
-            'label' => 'Judul berita'
+            'label' => 'Judul informasi'
          ]
       ];
    }
@@ -19,7 +19,7 @@ class Berita
       return [
          'id' => [
             'rules' => 'required|numeric',
-            'label' => 'ID berita'
+            'label' => 'ID informasi'
          ]
       ];
    }
