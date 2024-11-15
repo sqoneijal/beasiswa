@@ -137,3 +137,5 @@ controlpanel/node_modules
 controlpanel/bundle
 controlpanel/build.sh
 controlpanel/assets/tinymce
+
+controlpanel/pusaka.py

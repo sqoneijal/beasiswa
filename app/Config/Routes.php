@@ -2,6 +2,16 @@
 
 $routes = service('routes');
 
+function berita($routes): void
+{
+   $routes->group('berita', function ($routes) {
+      $routes->post('submit', 'Berita::submit');
+      $routes->post('getdata', 'Berita::getData');
+      $routes->post('hapus', 'Berita::hapus');
+   });
+}
+berita($routes);
+
 function generateBeasiswa($routes): void
 {
    $routes->group('generatebeasiswa', function ($routes) {

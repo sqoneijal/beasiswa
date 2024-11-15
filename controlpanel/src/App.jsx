@@ -51,7 +51,13 @@ const App = () => {
          .then(() => {
             if (keycloak.authenticated && !keycloak.isTokenExpired()) {
                keycloak.loadUserInfo().then((userInfo) => {
-                  dispatch(setInit(userInfo));
+                  const roleMahasiswa = keycloak.hasRealmRole("MHS");
+
+                  if (roleMahasiswa) {
+                     keycloak.logout();
+                  } else {
+                     dispatch(setInit(userInfo));
+                  }
                });
             } else {
                keycloak.login();
