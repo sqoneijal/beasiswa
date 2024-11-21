@@ -283,3 +283,7 @@ export const periode = (semester) => {
 
    if (tahun_ajaran && id_semester) return `${tahun_ajaran}/${toInt(tahun_ajaran) + 1} ${genap_ganjil_pendek[id_semester]}`;
 };
+
+export const arrLength = (content = []) => {
+   return content.length > 0;
+};

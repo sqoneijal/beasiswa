@@ -4,6 +4,10 @@ import { Route, Routes } from "react-router-dom";
 
 const Home = React.lazy(() => import("./page/home/Context"));
 const Profile = React.lazy(() => import("./page/profile/Context"));
+const Informasi = React.lazy(() => import("./page/informasi/Context"));
+const InformasiRead = React.lazy(() => import("./page/informasi/read/Detail"));
+const Beasiswa = React.lazy(() => import("./page/beasiswa/Context"));
+const BeasiswaDetail = React.lazy(() => import("./page/beasiswa/detail/Context"));
 
 const Routing = () => {
    const loader = (
@@ -24,6 +28,10 @@ const Routing = () => {
       <Routes>
          <Route path="/" loader={loader} element={<Home />} />
          <Route path="profile" loader={loader} element={<Profile />} />
+         <Route path="informasi" loader={loader} element={<Informasi />} />
+         <Route path="informasi/read/:slug" loader={loader} element={<InformasiRead />} />
+         <Route path="beasiswa" loader={loader} element={<Beasiswa />} />
+         <Route path="beasiswa/read/:slug" loader={loader} element={<BeasiswaDetail />} />
       </Routes>
    );
 };

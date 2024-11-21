@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { useLayoutEffect, useState } from "react";
-import { Col } from "react-bootstrap";
+import { Col, Image } from "react-bootstrap";
 import * as h from "~/Helpers";
 
 const OtherTags = ({ input, setInput, selectedLampiranUpload, setSelectedLampiranUpload }) => {
+   // string
+   const [thumbnailPreview, setThumbnailPreview] = useState("");
+
    // array
    const [daftarKategori, setDaftarKategori] = useState([]);
    const [daftarLampiran, setDaftarLampiran] = useState([]);
@@ -48,6 +51,19 @@ const OtherTags = ({ input, setInput, selectedLampiranUpload, setSelectedLampira
 
    return (
       <Col lg={4} md={4} sm={12}>
+         {thumbnailPreview && <Image src={thumbnailPreview} thumbnail />}
+         {h.form_upload("Thumbnail", "thumbnail", 12, {
+            onChange: (e) => {
+               const [file] = e.target.files;
+               if (file) {
+                  setThumbnailPreview(URL.createObjectURL(file));
+                  setInput((prev) => ({ ...prev, thumbnail: file }));
+               } else {
+                  setInput((prev) => ({ ...prev, thumbnail: "" }));
+               }
+            },
+            accept: "image/png, image/gif, image/jpeg",
+         })}
          {h.form_select(
             "Kategori (Optional)",
             "id_jenis_beasiswa",

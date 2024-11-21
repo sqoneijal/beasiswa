@@ -4,7 +4,7 @@ const { build } = require("esbuild");
 const path = require("path");
 
 build({
-   entryPoints: ["src/App.jsx"],
+   entryPoints: ["./src/App.jsx"],
    allowOverwrite: true,
    bundle: true,
    format: "esm", // Output format: ES modules

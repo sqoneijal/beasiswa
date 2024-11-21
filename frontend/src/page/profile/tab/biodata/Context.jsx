@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Card } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import Switch, { Case, Default } from "react-switch-case";
 import { Each } from "~/Each";
@@ -25,7 +26,7 @@ const Context = () => {
             display: "flex",
             justifyContent: "center",
          }}
-         wrapperclassName="page-loader flex-column justify-content-center"
+         wrapperClass="page-loader flex-column justify-content-center"
       />
    );
 
@@ -39,8 +40,12 @@ const Context = () => {
 
    return (
       <React.Suspense fallback={loader}>
-         <Biodata />
-         <div className="course_details-tab-button">
+         <Card className="mb-0">
+            <Card.Body>
+               <Biodata />
+            </Card.Body>
+         </Card>
+         <div className="course_details-tab-button mt-5">
             <ul className="nav nav-pills">
                <Each
                   of={tabArray}
@@ -60,23 +65,27 @@ const Context = () => {
          </div>
          <div className="course_details-tab-content">
             <div className="tab-content">
-               <Switch condition={tabActive}>
-                  <Case value="domisili">
-                     <Domisili />
-                  </Case>
-                  <Case value="ortu">
-                     <OrangTua />
-                  </Case>
-                  <Case value="wali">
-                     <Wali />
-                  </Case>
-                  <Case value="sekolah">
-                     <Sekolah />
-                  </Case>
-                  <Default>
-                     <InformasiUmum />
-                  </Default>
-               </Switch>
+               <Card>
+                  <Card.Body>
+                     <Switch condition={tabActive}>
+                        <Case value="domisili">
+                           <Domisili />
+                        </Case>
+                        <Case value="ortu">
+                           <OrangTua />
+                        </Case>
+                        <Case value="wali">
+                           <Wali />
+                        </Case>
+                        <Case value="sekolah">
+                           <Sekolah />
+                        </Case>
+                        <Default>
+                           <InformasiUmum />
+                        </Default>
+                     </Switch>
+                  </Card.Body>
+               </Card>
             </div>
          </div>
       </React.Suspense>

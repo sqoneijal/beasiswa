@@ -8,6 +8,7 @@ import { setModule } from "~/redux";
 const Biodata = React.lazy(() => import("./biodata/Context"));
 const Khs = React.lazy(() => import("./Khs"));
 const Transkrip = React.lazy(() => import("./Transkrip"));
+const LampiranUpload = React.lazy(() => import("./LampiranUpload"));
 
 const Context = () => {
    const { module } = useSelector((e) => e.redux);
@@ -52,6 +53,9 @@ const Context = () => {
                   </Case>
                   <Case value="prestasi">
                      <span>prestasi</span>
+                  </Case>
+                  <Case value="lampiran">
+                     <LampiranUpload />
                   </Case>
                </Switch>
             </div>

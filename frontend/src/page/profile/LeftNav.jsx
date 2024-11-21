@@ -16,6 +16,7 @@ const LeftNav = () => {
       { label: "Biodata", path: "biodata" },
       { label: "KHS", path: "khs" },
       { label: "Transkrip", path: "transkrip" },
+      { label: "Lampiran Upload", path: "lampiran" },
       { label: "Ekonomi", path: "ekonomi" },
       { label: "Prestasi", path: "prestasi" },
    ];

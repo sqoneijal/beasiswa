@@ -344,7 +344,7 @@ export const buttons = (label, isLoading = false, init = {}) => {
 };
 
 export const form_text = (label, name, labelSize = 2, config = {}, errors = {}) => {
-   const uniqueID = `${name}_${uid(32)}`;
+   const uniqueID = `${uid(32)}`;
 
    return (
       <Row className="mb-6">
@@ -359,8 +359,24 @@ export const form_text = (label, name, labelSize = 2, config = {}, errors = {}) 
    );
 };
 
+export const form_upload = (label, name, labelSize = 2, config = {}, errors = {}) => {
+   const uniqueID = `${uid(32)}`;
+
+   return (
+      <Row className="mb-6">
+         <label className={`col-sm-${labelSize} col-form-label`} htmlFor={uniqueID}>
+            {label}
+         </label>
+         <Col sm={12 - labelSize}>
+            <Form.Control type="file" id={uniqueID} placeholder={label} {...config} isInvalid={is_invalid(name, errors)} />
+            {msg_response(name, errors)}
+         </Col>
+      </Row>
+   );
+};
+
 export const form_select = (label, name, labelSize = 2, options = [], config = {}, errors = {}) => {
-   const uniqueID = `${name}_${uid(32)}`;
+   const uniqueID = `${uid(32)}`;
 
    return (
       <Row className="mb-6">

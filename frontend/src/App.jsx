@@ -108,7 +108,7 @@ const App = () => {
             display: "flex",
             justifyContent: "center",
          }}
-         wrapperclassName="page-loader flex-column bg-dark bg-opacity-25"
+         wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
       />
    );
 

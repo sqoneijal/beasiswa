@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Card, Table } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import { Each } from "~/Each";
@@ -78,47 +78,51 @@ const Transkrip = () => {
    return isLoading ? (
       loader
    ) : (
-      <Table size="sm" responsive>
-         <thead>
-            <tr>
-               <th className="text-center">NO</th>
-               <th className="text-center">KODE</th>
-               <th>NAMA MATAKULIAH</th>
-               <th className="text-center">SKS</th>
-               <th className="text-center">NILAI HURUF</th>
-               <th className="text-center">TOTAL BOBOT</th>
-            </tr>
-         </thead>
-         <tbody>
-            <Each
-               of={content}
-               render={(row, index) => (
+      <Card>
+         <Card.Body>
+            <Table size="sm" responsive>
+               <thead>
                   <tr>
-                     <td className="text-center">{index + 1}</td>
-                     <td className="text-center">{h.parse("kode_mata_kuliah", row)}</td>
-                     <td>{h.parse("nama_mata_kuliah", row)}</td>
-                     <td className="text-center">{h.parse("sks_mata_kuliah", row)}</td>
-                     <td className="text-center">{h.parse("nilai_huruf", row)}</td>
-                     <td className="text-center">{h.toInt(h.parse("sks_mata_kuliah", row)) * h.toInt(h.parse("nilai_angka", row))}</td>
+                     <th className="text-center">NO</th>
+                     <th className="text-center">KODE</th>
+                     <th>NAMA MATAKULIAH</th>
+                     <th className="text-center">SKS</th>
+                     <th className="text-center">NILAI HURUF</th>
+                     <th className="text-center">TOTAL BOBOT</th>
                   </tr>
-               )}
-            />
-         </tbody>
-         <tfoot>
-            <tr>
-               <th colSpan={5}>Total Satuan Kredit Semester (SKS)</th>
-               <th className="text-center">{total_sks}</th>
-            </tr>
-            <tr>
-               <th colSpan={5}>Total Bobot</th>
-               <th className="text-center">{total_bobot}</th>
-            </tr>
-            <tr>
-               <th colSpan={5}>Indeks Prestasi Kumulatif</th>
-               <th className="text-center">{total_bobot > 0 ? (total_bobot / total_sks).toFixed(2) : 0}</th>
-            </tr>
-         </tfoot>
-      </Table>
+               </thead>
+               <tbody>
+                  <Each
+                     of={content}
+                     render={(row, index) => (
+                        <tr>
+                           <td className="text-center">{index + 1}</td>
+                           <td className="text-center">{h.parse("kode_mata_kuliah", row)}</td>
+                           <td>{h.parse("nama_mata_kuliah", row)}</td>
+                           <td className="text-center">{h.parse("sks_mata_kuliah", row)}</td>
+                           <td className="text-center">{h.parse("nilai_huruf", row)}</td>
+                           <td className="text-center">{h.toInt(h.parse("sks_mata_kuliah", row)) * h.toInt(h.parse("nilai_angka", row))}</td>
+                        </tr>
+                     )}
+                  />
+               </tbody>
+               <tfoot>
+                  <tr>
+                     <th colSpan={5}>Total Satuan Kredit Semester (SKS)</th>
+                     <th className="text-center">{total_sks}</th>
+                  </tr>
+                  <tr>
+                     <th colSpan={5}>Total Bobot</th>
+                     <th className="text-center">{total_bobot}</th>
+                  </tr>
+                  <tr>
+                     <th colSpan={5}>Indeks Prestasi Kumulatif</th>
+                     <th className="text-center">{total_bobot > 0 ? (total_bobot / total_sks).toFixed(2) : 0}</th>
+                  </tr>
+               </tfoot>
+            </Table>
+         </Card.Body>
+      </Card>
    );
 };
 export default Transkrip;

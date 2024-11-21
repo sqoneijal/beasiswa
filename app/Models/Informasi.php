@@ -7,6 +7,27 @@ use CodeIgniter\Database\RawSql;
 class Informasi extends Common
 {
 
+   public function getDetailBerita(string $slug): array
+   {
+      $table = $this->db->table('tb_berita tb');
+      $table->select('tb.id, tb.judul, tb.content, tb.id_jenis_beasiswa, tb.uploaded, tb.modified, tb.slug, tb.thumbnail, tmjb.nama as jenis_beasiswa');
+      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tb.id_jenis_beasiswa');
+      $table->where('tb.slug', $slug);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
    public function hapus(array $post): array
    {
       try {
@@ -22,7 +43,7 @@ class Informasi extends Common
    public function submit(array $post): array
    {
       try {
-         $fields = ['judul', 'id_jenis_beasiswa', 'user_modified'];
+         $fields = ['judul', 'id_jenis_beasiswa', 'user_modified', 'thumbnail'];
          foreach ($fields as $field) {
             if (@$post[$field]) {
                $data[$field] = $post[$field];
@@ -137,7 +158,7 @@ class Informasi extends Common
       group by tlb.id_berita) tlb', 'tlb.id_berita = tb.id', 'left');
 
       $this->datatableColumnSearch($table, ['tb.judul']);
-      $this->datatableColumnOrder($table, ['judul', 'jenis_beasiswa', 'uploaded']);
+      $this->datatableColumnOrder($table, ['judul', 'jenis_beasiswa', 'uploaded', 'id']);
 
       return $table;
    }

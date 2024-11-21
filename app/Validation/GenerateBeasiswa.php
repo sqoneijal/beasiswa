@@ -39,7 +39,25 @@ class GenerateBeasiswa
             'label' => 'Apakah wajib IPK'
          ],
          'id_kategori_beasiswa' => [
-            'rules' => 'required|numeric',
+            'rules' => ['required', 'numeric', static function ($value, array $data, ?string &$error): bool {
+               if ($data['pageType'] === 'add') {
+                  $db = \Config\Database::connect();
+
+                  $table = $db->table('tb_generate_beasiswa');
+                  $table->where('periode', $data['periode']);
+                  $table->where('id_kategori_beasiswa', $value);
+
+                  $found = $table->countAllResults() > 0 ? true : false;
+
+                  if ($found) {
+                     $error = 'Kategori beasiswa ini sudah terdaftar pada periode aktif sekarang. Silahkan ganti dengan kategori yang lain.';
+                     return false;
+                  }
+                  return true;
+               }
+
+               return true;
+            }],
             'label' => 'Kategori beasiswa'
          ],
          'minimal_ipk' => [

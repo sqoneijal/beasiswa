@@ -9,6 +9,13 @@ use App\Validation\Referensi\KategoriBeasiswa as Validate;
 class KategoriBeasiswa extends BaseController
 {
 
+   public function read(): object
+   {
+      $model = new Model();
+      $content = $model->getDetail($this->post['slug']);
+      return $this->respond($content);
+   }
+
    public function submit(): object
    {
       $response = ['status' => false, 'errors' => []];

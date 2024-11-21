@@ -2,15 +2,16 @@
 
 $routes = service('routes');
 
-function berita($routes): void
+function informasi($routes): void
 {
-   $routes->group('berita', function ($routes) {
-      $routes->post('submit', 'Berita::submit');
-      $routes->post('getdata', 'Berita::getData');
-      $routes->post('hapus', 'Berita::hapus');
+   $routes->group('informasi', function ($routes) {
+      $routes->post('submit', 'Informasi::submit');
+      $routes->post('getdata', 'Informasi::getData');
+      $routes->post('hapus', 'Informasi::hapus');
+      $routes->post('read', 'Informasi::read');
    });
 }
-berita($routes);
+informasi($routes);
 
 function generateBeasiswa($routes): void
 {
@@ -36,6 +37,7 @@ function referensiKategoriBeasiswa($routes): void
       $routes->post('getdata', 'KategoriBeasiswa::getData');
       $routes->post('submit', 'KategoriBeasiswa::submit');
       $routes->post('hapus', 'KategoriBeasiswa::hapus');
+      $routes->post('read', 'KategoriBeasiswa::read');
    });
 }
 
