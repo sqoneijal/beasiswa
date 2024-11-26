@@ -1,7 +1,9 @@
 import React, { useLayoutEffect, useState } from "react";
-import { Col } from "react-bootstrap";
+import { Col, Table } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { Each } from "~/Each";
 import * as h from "~/Helpers";
 
 const Content = () => {
@@ -13,6 +15,7 @@ const Content = () => {
 
    // object
    const [detailMahasiswa, setDetailMahasiswa] = useState({});
+   const [statusPendaftaranBeasiswa, setStatusPendaftaranBeasiswa] = useState({});
 
    // string
    const [angkatanMahasiswa, setAngkatanMahasiswa] = useState("");
@@ -21,8 +24,8 @@ const Content = () => {
       return h.objLength(user) && user.roleMahasiswa;
    };
 
-   const getBiodataMahasiswa = (nim) => {
-      const formData = { nim };
+   const getBiodataMahasiswa = (nim, id_generate_beasiswa) => {
+      const formData = { nim, id_generate_beasiswa };
 
       setIsLoading(true);
       const fetch = h.post(`/mahasiswa/biodata/getdata`, formData);
@@ -37,6 +40,7 @@ const Content = () => {
 
          setAngkatanMahasiswa(data.id_periode.substring(0, data.id_periode.length - 1));
          setDetailMahasiswa(data);
+         setStatusPendaftaranBeasiswa(data.statusPendaftaranBeasiswa);
       });
       fetch.finally(() => {
          setIsLoading(false);
@@ -58,9 +62,13 @@ const Content = () => {
    );
 
    useLayoutEffect(() => {
-      if (h.objLength(init) && init.roleMahasiswa) getBiodataMahasiswa(init.preferred_username);
+      if (h.objLength(init) && init.roleMahasiswa) getBiodataMahasiswa(init.preferred_username, h.parse("id_generate_beasiswa", detailBeasiswa));
       return () => {};
-   }, [init]);
+   }, [init, detailBeasiswa]);
+
+   const renderBukti = (id_lampiran, file) => {
+      return typeof file[id_lampiran] === "undefined" ? "" : file[id_lampiran];
+   };
 
    return isLoading ? (
       loader
@@ -71,18 +79,52 @@ const Content = () => {
                <h3 className="course_details-title">Beasiswa : {h.parse("nama", detailBeasiswa)}</h3>
                {checkIjinDaftarBeasiswa(init) &&
                   detailBeasiswa.angkatan.includes(angkatanMahasiswa) &&
-                  h.parse("status_mahasiswa", detailMahasiswa) === "Aktif" && (
+                  h.parse("status_mahasiswa", detailMahasiswa) === "Aktif" &&
+                  !h.objLength(statusPendaftaranBeasiswa) && (
                      <div className="course_details-meta">
                         <div className="course_details-meta-right">
-                           <a href="#" className="theme-btn theme-btn-medium">
+                           <Link to={`/beasiswa/daftar/${h.parse("id_generate_beasiswa", detailBeasiswa)}`} className="theme-btn theme-btn-medium">
                               Daftar
-                           </a>
+                           </Link>
                         </div>
                      </div>
                   )}
             </div>
             <div className="blog_details-content">
                <div className="blog_details-inner-text mr-80">{h.parse("keterangan", detailBeasiswa)}</div>
+               {h.objLength(statusPendaftaranBeasiswa) && (
+                  <div className="blog_details-inner-text mr-80 mt-60">
+                     <h3 className="course_details-title">Status Pendaftaran Beasiswa</h3>
+                     {h.parse("sudah_divalidasi", statusPendaftaranBeasiswa) === "f" && <p>Status pendaftaran anda sedang divalidasi oleh admin.</p>}
+                     <Table responsive hover size="sm">
+                        <thead>
+                           <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                              <th>keterangan lampiran</th>
+                              <th>bukti</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <Each
+                              of={detailMahasiswa.lampiranPerluDiupload}
+                              render={(row) => (
+                                 <tr>
+                                    <td>{h.parse("nama", row)}</td>
+                                    <td>
+                                       <a
+                                          href={`https://lh3.googleusercontent.com/d/${
+                                             renderBukti(row.id, detailMahasiswa.lampiranYangDiupload).google_drive_id
+                                          }?authuser=1/view`}
+                                          target="_blank">
+                                          {renderBukti(row.id, detailMahasiswa.lampiranYangDiupload).orig_name}
+                                       </a>
+                                    </td>
+                                 </tr>
+                              )}
+                           />
+                        </tbody>
+                     </Table>
+                  </div>
+               )}
             </div>
          </div>
       </Col>

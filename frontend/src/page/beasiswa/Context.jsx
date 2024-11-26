@@ -14,10 +14,6 @@ const Context = () => {
    // array
    const [listContent, setListContent] = useState([]);
 
-   const getDaftarPeriode = () => {
-      return axios.post(`${window.apiPath}/periode/getdata`);
-   };
-
    const getData = () => {
       const formData = {
          start: 0,

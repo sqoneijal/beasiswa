@@ -3,9 +3,161 @@
 namespace App\Models;
 
 use CodeIgniter\Database\RawSql;
+use App\Libraries\Sevima;
 
 class GenerateBeasiswa extends Common
 {
+
+   public function submitDaftar(array $post): array
+   {
+      try {
+         $checkApakahSudahMendaftarSebelumnya = $this->checkApakahSudahMendaftarSebelumnya($post);
+
+         if (!$checkApakahSudahMendaftarSebelumnya) {
+            $table = $this->db->table('tb_pendaftar');
+            $table->ignore(true)->insert([
+               'nim' => $post['nim'],
+               'periode' => $post['periode'],
+               'id_generate_beasiswa' => $post['id_generate_beasiswa'],
+               'uploaded' => new RawSql('now()')
+            ]);
+         }
+         return ['status' => true, 'content' => '', 'msg_response' => 'Pendaftaran berhasil.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
+   public function initPendaftaranMahasiswa(array $post): array
+   {
+      $sevima = new Sevima();
+      $periode = $sevima->getPeriode();
+
+      $periodeAktif = array_map(function ($row) {
+         return $row['nama_singkat'];
+      }, array_filter($periode, function ($row) {
+         return $row['is_aktif'] === '1';
+      }));
+
+      $statusPendaftaran = $this->getStatusPendaftaran(array_merge($post, ['periode' => current($periodeAktif)]));
+
+      return [
+         'generateBeasiswa' => $this->getDetailGenerateBeasiswa($post['id_generate_beasiswa']),
+         'statusPendaftaran' => $statusPendaftaran,
+         'apakahSudahMendaftarSebelumnya' => $this->checkApakahSudahMendaftarSebelumnya(array_merge($post, ['periode' => current($periodeAktif)])),
+         'lampiranTelahDiUpload' => $this->getDataLampiranUpload($post['nim'])
+      ];
+   }
+
+   public function getDataLampiranUpload(int $nim): array
+   {
+      $table = $this->db->table('tb_lampiran_upload_mahasiswa');
+      $table->select('id_lampiran_upload, orig_name, google_drive_id');
+      $table->where('nim', $nim);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $row) {
+         $response[$row['id_lampiran_upload']] = $row;
+      }
+      return $response;
+   }
+
+   private function checkApakahSudahMendaftarSebelumnya(array $post): bool
+   {
+      $table = $this->db->table('tb_pendaftar');
+      $table->where('nim', $post['nim']);
+      $table->where('is_aktif', true);
+
+      return $table->countAllResults() > 0;
+   }
+
+   private function getDetailGenerateBeasiswa(int $id_generate_beasiswa): array
+   {
+      $table = $this->db->table('tb_generate_beasiswa tgb');
+      $table->select('tgb.id, tgb.periode, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as jenis_kategori_beasiswa, tmjb.keterangan as keterangan_kategori_beasiswa');
+      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
+      $table->where('tgb.id', $id_generate_beasiswa);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+
+         $response['angkatan'] = $this->getAngkatanGenerateBeasiswa($id_generate_beasiswa);
+         $response['lampiranToUpload'] = $this->getLampiranToUpload($id_generate_beasiswa);
+
+         unset($response['user_modified']);
+      }
+      return $response;
+   }
+
+   public function getLampiranToUpload(int $id_generate_beasiswa): array
+   {
+      $table = $this->db->table('tb_lampiran_upload tlu');
+      $table->select('tmlu.id, tmlu.nama');
+      $table->join('tb_mst_lampiran_upload tmlu', 'tmlu.id = tlu.id_lampiran_upload');
+      $table->where('tlu.id_generate_beasiswa', $id_generate_beasiswa);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
+   private function getAngkatanGenerateBeasiswa(int $id_generate_beasiswa): array
+   {
+      $table = $this->db->table('tb_angkatan_beasiswa');
+      $table->where('id_generate_beasiswa', $id_generate_beasiswa);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $row) {
+         $response[] = $row['angkatan'];
+      }
+      return $response;
+   }
+
+   public function getStatusPendaftaran(array $post): array
+   {
+      $table = $this->db->table('tb_pendaftar');
+      $table->where('nim', $post['nim']);
+      $table->where('periode', $post['periode']);
+      $table->where('id_generate_beasiswa', $post['id_generate_beasiswa']);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
 
    public function hapus(array $post): array
    {

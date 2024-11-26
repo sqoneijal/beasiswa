@@ -9,6 +9,20 @@ use App\Models\GenerateBeasiswa as Model;
 class GenerateBeasiswa extends BaseController
 {
 
+   public function daftar(): object
+   {
+      $model = new Model();
+      $content = $model->submitDaftar($this->post);
+      return $this->respond($content);
+   }
+
+   public function initPendaftaranMahasiswa(): object
+   {
+      $model = new Model();
+      $content = $model->initPendaftaranMahasiswa($this->post);
+      return $this->respond($content);
+   }
+
    public function hapus(): object
    {
       $response = ['status' => false, 'errors' => []];

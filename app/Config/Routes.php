@@ -19,6 +19,8 @@ function generateBeasiswa($routes): void
       $routes->post('submit', 'GenerateBeasiswa::submit');
       $routes->post('getdata', 'GenerateBeasiswa::getData');
       $routes->post('hapus', 'GenerateBeasiswa::hapus');
+      $routes->post('initpendaftaranmahasiswa', 'GenerateBeasiswa::initPendaftaranMahasiswa');
+      $routes->post('daftar', 'GenerateBeasiswa::daftar');
    });
 }
 generateBeasiswa($routes);
@@ -97,8 +99,17 @@ function mahasiswaTranskrip($routes): void
    });
 }
 
+function mahasiswaLampiranUpload($routes): void
+{
+   $routes->group('lampiranupload', function ($routes) {
+      $routes->post('getdata', 'LampiranUpload::getData');
+      $routes->post('upload', 'LampiranUpload::upload');
+   });
+}
+
 $routes->group('mahasiswa', ['namespace' => 'App\Controllers\Mahasiswa'], function ($routes) {
    mahasiswaBiodata($routes);
    mahasiswaKHS($routes);
    mahasiswaTranskrip($routes);
+   mahasiswaLampiranUpload($routes);
 });

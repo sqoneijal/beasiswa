@@ -61,8 +61,8 @@ class KategoriBeasiswa extends Common
             $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
          }
 
-         $response['angkatan'] = $this->getAngkatanBeasiswa($data['id_generate_beasiswa']);
-         $response['lampiranUpload'] = $this->getLampiranUpload($data['id_generate_beasiswa']);
+         $response['angkatan'] = isset($data['id_generate_beasiswa']) ? $this->getAngkatanBeasiswa($data['id_generate_beasiswa']) : [];
+         $response['lampiranUpload'] = isset($data['id_generate_beasiswa']) ? $this->getLampiranUpload($data['id_generate_beasiswa']) : [];
       }
       return $response;
    }

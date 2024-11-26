@@ -11,7 +11,7 @@ class Informasi extends Common
    {
       $table = $this->db->table('tb_berita tb');
       $table->select('tb.id, tb.judul, tb.content, tb.id_jenis_beasiswa, tb.uploaded, tb.modified, tb.slug, tb.thumbnail, tmjb.nama as jenis_beasiswa');
-      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tb.id_jenis_beasiswa');
+      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tb.id_jenis_beasiswa', 'left');
       $table->where('tb.slug', $slug);
 
       $get = $table->get();
