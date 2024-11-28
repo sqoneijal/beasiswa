@@ -317,7 +317,7 @@ class BaseBuilder
 
         // If it contains `,`, it has multiple tables
         if (is_string($tableName) && ! str_contains($tableName, ',')) {
-            $this->tableName = $tableName;  // @TODO remove alias if exists
+            $this->tableName = $tableName;
         } else {
             $this->tableName = '';
         }
@@ -2018,7 +2018,7 @@ class BaseBuilder
             $sql = 'INSERT INTO ' . $table . ' (' . implode(', ', $keys) . ")\n{:_table_:}ON DUPLICATE KEY UPDATE\n" . implode(
                 ",\n",
                 array_map(
-                    static fn ($key, $value) => $table . '.' . $key . ($value instanceof RawSql ?
+                    static fn($key, $value) => $table . '.' . $key . ($value instanceof RawSql ?
                         ' = ' . $value :
                         ' = VALUES(' . $value . ')'),
                     array_keys($updateFields),
@@ -2108,7 +2108,7 @@ class BaseBuilder
             if (is_string($set)) {
                 $set = explode(',', $set);
 
-                $set = array_map(static fn ($key) => trim($key), $set);
+                $set = array_map(static fn($key) => trim($key), $set);
             }
 
             if ($set instanceof RawSql) {
@@ -2152,7 +2152,7 @@ class BaseBuilder
         if (is_string($query)) {
             if ($columns !== null && is_string($columns)) {
                 $columns = explode(',', $columns);
-                $columns = array_map(static fn ($key) => trim($key), $columns);
+                $columns = array_map(static fn($key) => trim($key), $columns);
             }
 
             $columns = (array) $columns;
@@ -2190,7 +2190,7 @@ class BaseBuilder
      */
     protected function formatValues(array $values): array
     {
-        return array_map(static fn ($index) => '(' . implode(',', $index) . ')', $values);
+        return array_map(static fn($index) => '(' . implode(',', $index) . ')', $values);
     }
 
     /**
@@ -2649,7 +2649,7 @@ class BaseBuilder
             $sql .= implode(
                 ",\n",
                 array_map(
-                    static fn ($key, $value) => $key . ($value instanceof RawSql ?
+                    static fn($key, $value) => $key . ($value instanceof RawSql ?
                         ' = ' . $value :
                         ' = ' . $alias . '.' . $value),
                     array_keys($updateFields),
@@ -2664,12 +2664,11 @@ class BaseBuilder
             $sql .= 'WHERE ' . implode(
                 ' AND ',
                 array_map(
-                    static fn ($key, $value) => (
+                    static fn($key, $value) => (
                         ($value instanceof RawSql && is_string($key))
                         ?
                         $table . '.' . $key . ' = ' . $value
-                        :
-                        (
+                        : (
                             $value instanceof RawSql
                             ?
                             $value
@@ -2691,8 +2690,8 @@ class BaseBuilder
             $data = implode(
                 " UNION ALL\n",
                 array_map(
-                    static fn ($value) => 'SELECT ' . implode(', ', array_map(
-                        static fn ($key, $index) => $index . ' ' . $key,
+                    static fn($value) => 'SELECT ' . implode(', ', array_map(
+                        static fn($key, $index) => $index . ' ' . $key,
                         $keys,
                         $value
                     )),
@@ -2914,10 +2913,9 @@ class BaseBuilder
             $sql .= 'ON ' . implode(
                 ' AND ',
                 array_map(
-                    static fn ($key, $value) => (
+                    static fn($key, $value) => (
                         $value instanceof RawSql ?
-                        $value :
-                        (
+                        $value : (
                             is_string($key) ?
                             $table . '.' . $key . ' = ' . $alias . '.' . $value :
                             $table . '.' . $value . ' = ' . $alias . '.' . $value
@@ -2946,8 +2944,8 @@ class BaseBuilder
             $data = implode(
                 " UNION ALL\n",
                 array_map(
-                    static fn ($value) => 'SELECT ' . implode(', ', array_map(
-                        static fn ($key, $index) => $index . ' ' . $key,
+                    static fn($value) => 'SELECT ' . implode(', ', array_map(
+                        static fn($key, $index) => $index . ' ' . $key,
                         $keys,
                         $value
                     )),
@@ -3340,7 +3338,8 @@ class BaseBuilder
     {
         $str = trim($str);
 
-        if ($str === ''
+        if (
+            $str === ''
             || ctype_digit($str)
             || (string) (float) $str === $str
             || in_array(strtoupper($str), ['TRUE', 'FALSE'], true)
