@@ -2,6 +2,33 @@
 
 $routes = service('routes');
 
+function beasiswaPendaftar($routes): void
+{
+   $routes->group('pendaftar', function ($routes) {
+      $routes->post('getdata', 'Pendaftar::getData');
+      $routes->post('getdetail', 'Pendaftar::getDetail');
+      $routes->post('submitperbaiki', 'Pendaftar::submitPerbaiki');
+   });
+}
+
+function beasiswa($routes): void
+{
+   $routes->group('beasiswa', ['namespace' => 'App\Controllers\Beasiswa'], function ($routes) {
+      beasiswaPendaftar($routes);
+   });
+}
+beasiswa($routes);
+
+function tentang($routes): void
+{
+   $routes->group('tentang', function ($routes) {
+      $routes->get('getdata', 'Tentang::getData');
+
+      $routes->post('submit', 'Tentang::submit');
+   });
+}
+tentang($routes);
+
 function informasi($routes): void
 {
    $routes->group('informasi', function ($routes) {

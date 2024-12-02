@@ -51,6 +51,12 @@ const Menu = ({ setPageTypeButton }) => {
          ],
       },
       {
+         label: "Tentang",
+         pathname: "/tentang",
+         icon: "menu-icon tf-icons ti ti-receipt",
+         sub: false,
+      },
+      {
          label: "Informasi",
          pathname: "/informasi",
          icon: "menu-icon tf-icons ti ti-receipt",

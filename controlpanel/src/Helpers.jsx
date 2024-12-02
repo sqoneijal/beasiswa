@@ -511,7 +511,7 @@ const DatatableServerSide = ({ ...content }) => {
          orderable: false,
          className: "text-end",
          width: "5%",
-         render: () => renderDTActionButtons(),
+         render: () => renderDTActionButtons(content),
       },
    ];
 
@@ -568,6 +568,9 @@ const DatatableServerSide = ({ ...content }) => {
       };
    };
 
+   const contentOrder = arrLength(content.order) ? content.order : [[0, "asc"]];
+   const checkOrderVariable = typeof content.order === "undefined" ? [[0, "asc"]] : contentOrder;
+
    dt = new DataTables("#datatable", {
       processing: true,
       serverSide: true,
@@ -581,7 +584,7 @@ const DatatableServerSide = ({ ...content }) => {
          error: handleError,
       },
       columns: content.columns,
-      order: content.order?.content.order,
+      order: checkOrderVariable,
       columnDefs: content.columnDefs ? renderColumnDefs : [],
       dom: getDom(),
       language: {
@@ -603,11 +606,13 @@ const getDom = () => {
    return '<"row mx-1"<"col-sm-12 col-md-3" l><"col-sm-12 col-md-9"<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-md-end justify-content-center flex-wrap"<"me-4 mt-n6 mt-md-0"f>B>>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>';
 };
 
-const renderDTActionButtons = () => {
+const renderDTActionButtons = (content) => {
    let html = `<div class="d-flex align-items-center">`;
    html += `<a href="#" id="view" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md"></i></a>`;
-   html += `<a href="#" id="edit" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-edit ti-md"></i></a>`;
-   html += `<a href="#" id="delete" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md"></i></a>`;
+   if (content.show_edit_button)
+      html += `<a href="#" id="edit" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-edit ti-md"></i></a>`;
+   if (content.show_delete_button)
+      html += `<a href="#" id="delete" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md"></i></a>`;
    html += `</div>`;
    return html;
 };

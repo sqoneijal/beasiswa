@@ -1,5 +1,5 @@
 import { Editor } from "@tinymce/tinymce-react";
-import decode from "decode-html";
+import decode from `decode-html`;
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
