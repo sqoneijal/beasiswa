@@ -3,34 +3,37 @@ import React, { useLayoutEffect } from "react";
 import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
-import { setModule } from "~/redux";
+import { setFilter, setModule } from "~/redux";
 moment.locale("id");
 
 let datatable;
 
 const Lists = () => {
    const { filter, module } = useSelector((e) => e.redux);
+   const { daftarPeriode } = module;
    const dispatch = useDispatch();
 
-   const datatable_url = `/beasiswa/pendaftar/getdata?${h.serialize(filter)}`;
+   const base_url_datatable = "/beasiswa/pendaftar/getdata";
+   const datatable_url = `${base_url_datatable}?${h.serialize(filter)}`;
    datatable = h.initDatatable({
       show_edit_button: false,
       show_delete_button: false,
       url: datatable_url,
       columns: [
-         { data: "nim" },
-         { data: "nama" },
-         { data: "jenis_beasiswa" },
+         { targets: 1, data: "nim" },
+         { targets: 2, data: "nama" },
+         { targets: 3, data: "jenis_beasiswa" },
          {
+            targets: 4,
             data: null,
             render: (data) => {
                return moment(h.parse("uploaded", data)).format("DD MMMM YYYY");
             },
          },
-         { data: null },
+         { targets: 4, data: null, visible: true },
       ],
       columnDefs: true,
-      order: [[3, "asc"]],
+      orders: [[3, "asc"]],
       createdRow: (row, data) => {
          const _view = row.querySelector("#view");
          if (_view) {
@@ -39,32 +42,33 @@ const Lists = () => {
                dispatch(setModule({ ...module, openDetail: true, detailContent: data }));
             };
          }
+      },
+      initComplete: () => {
+         const container = document.querySelector("div.custom_filter");
 
-         const _edit = row.querySelector("#edit");
-         if (_edit) {
-            _edit.onclick = (e) => {
-               e.preventDefault();
-               setDetailContent(data);
-               setPageType("update");
-               setOpenForms(true);
-            };
-         }
+         const select = document.createElement("select");
+         select.className = "form-select";
+         select.innerHTML = '<option value="">Periode</option>';
 
-         const _delete = row.querySelector("#delete");
-         if (_delete) {
-            _delete.onclick = (e) => {
-               e.preventDefault();
-               h.confirmDelete({
-                  url: "/hapus",
-                  id: data.id,
-               }).then((res) => {
-                  if (typeof res === "undefined") return;
-                  const { data } = res;
-                  h.notification(data.status, data.msg_response);
-                  data.status && datatable.reload();
-               });
-            };
-         }
+         const sortedData = [...daftarPeriode].sort((a, b) => {
+            return b.nama_periode.localeCompare(a.nama_periode);
+         });
+
+         sortedData.forEach((row) => {
+            const option = document.createElement("option");
+            option.value = row.nama_singkat;
+            option.textContent = row.nama_periode;
+            option.selected = row.nama_singkat === filter.periode;
+            select.appendChild(option);
+         });
+
+         select.onchange = (e) => {
+            const value = e.target.value;
+            h.handleFilterDatatable(base_url_datatable, { ...filter, periode: value });
+            dispatch(setFilter({ ...filter, periode: value }));
+         };
+
+         container.appendChild(select);
       },
    });
 

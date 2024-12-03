@@ -74,12 +74,12 @@ const Menu = ({ setPageTypeButton }) => {
                pathname: "/beasiswa/pendaftar",
             },
             {
-               label: "Lulus Berkas",
-               pathname: "/beasiswa/lulusberkas",
+               label: "Perbaiki Berkas",
+               pathname: "/beasiswa/perbaikiberkas",
             },
             {
-               label: "Ditolak Berkas",
-               pathname: "/beasiswa/ditolakberkas",
+               label: "Lulus Berkas",
+               pathname: "/beasiswa/lulusberkas",
             },
             {
                label: "Tahap Wawancara",
@@ -135,7 +135,7 @@ const Menu = ({ setPageTypeButton }) => {
                      />
                   </svg>
                </span>
-               <span className="app-brand-text demo menu-text fw-bold">Vuexy</span>
+               <span className="app-brand-text demo menu-text fw-bold">Beasiswa</span>
             </Link>
             <a href="#" className="layout-menu-toggle menu-link text-large ms-auto">
                <i className="ti menu-toggle-icon d-none d-xl-block align-middle" />

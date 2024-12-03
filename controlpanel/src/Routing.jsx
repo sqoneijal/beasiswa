@@ -10,6 +10,7 @@ const GenerateBeasiswa = React.lazy(() => import("./page/generatebeasiswa/Contex
 const Informasi = React.lazy(() => import("./page/informasi/Context"));
 const Tentang = React.lazy(() => import("./page/tentang/Context"));
 const BeasiswaPendaftar = React.lazy(() => import("./page/beasiswa/pendaftar/Context"));
+const BeasiswaPerbaikiberkas = React.lazy(() => import("./page/beasiswa/perbaikiberkas/Context"));
 
 const Routing = ({ setPageTypeButton }) => {
    const loader = (
@@ -37,6 +38,7 @@ const Routing = ({ setPageTypeButton }) => {
          </Route>
          <Route path="beasiswa">
             <Route path="pendaftar" loader={loader} element={<BeasiswaPendaftar {...props} />} />
+            <Route path="perbaikiberkas" loader={loader} element={<BeasiswaPerbaikiberkas {...props} />} />
          </Route>
          <Route path="periode" loader={loader} element={<Periode {...props} />} />
          <Route path="generatebeasiswa" loader={loader} element={<GenerateBeasiswa {...props} />} />

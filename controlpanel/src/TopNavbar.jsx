@@ -1,6 +1,12 @@
-import React from "react";
+import lozad from "lozad";
+import React, { useLayoutEffect } from "react";
 
 const TopNavbar = ({ pageTypeButton }) => {
+   useLayoutEffect(() => {
+      lozad().observe();
+      return () => {};
+   }, []);
+
    return (
       <nav className="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
          <div className="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -14,7 +20,7 @@ const TopNavbar = ({ pageTypeButton }) => {
                <li className="nav-item navbar-dropdown dropdown-user dropdown">
                   <a className="nav-link dropdown-toggle hide-arrow p-0" href="#" data-bs-toggle="dropdown">
                      <div className="avatar avatar-online">
-                        <img src="../../assets/img/avatars/1.png" alt="" className="rounded-circle" />
+                        <img src="/assets/logo_uin.svg" alt="" className="rounded-circle lozad" />
                      </div>
                   </a>
                   <ul className="dropdown-menu dropdown-menu-end">

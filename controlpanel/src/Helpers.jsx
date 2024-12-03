@@ -568,10 +568,11 @@ const DatatableServerSide = ({ ...content }) => {
       };
    };
 
-   const contentOrder = arrLength(content.order) ? content.order : [[0, "asc"]];
-   const checkOrderVariable = typeof content.order === "undefined" ? [[0, "asc"]] : contentOrder;
+   const contentOrder = arrLength(content.orders) ? content.orders : [[0, "asc"]];
+   const checkOrderVariable = typeof content.orders === "undefined" ? [[0, "asc"]] : contentOrder;
 
    dt = new DataTables("#datatable", {
+      ...content,
       processing: true,
       serverSide: true,
       pageLength: 10,
@@ -583,7 +584,6 @@ const DatatableServerSide = ({ ...content }) => {
          type: "post",
          error: handleError,
       },
-      columns: content.columns,
       order: checkOrderVariable,
       columnDefs: content.columnDefs ? renderColumnDefs : [],
       dom: getDom(),
@@ -603,7 +603,7 @@ const DatatableServerSide = ({ ...content }) => {
 };
 
 const getDom = () => {
-   return '<"row mx-1"<"col-sm-12 col-md-3" l><"col-sm-12 col-md-9"<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-md-end justify-content-center flex-wrap"<"me-4 mt-n6 mt-md-0"f>B>>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>';
+   return '<"row mx-1"<"col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start gap-2"l<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start"B>><"col-12 col-md-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-5 gap-md-4 mt-n6 mt-md-0"f<"custom_filter mb-6 mb-md-0">>>t<"row mx-1"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>';
 };
 
 const renderDTActionButtons = (content) => {
@@ -615,6 +615,10 @@ const renderDTActionButtons = (content) => {
       html += `<a href="#" id="delete" class="btn btn-icon btn-text-secondary waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md"></i></a>`;
    html += `</div>`;
    return html;
+};
+
+export const handleFilterDatatable = (url, content = {}) => {
+   dt.ajax.url(`${window.apiPath}${url}?${serialize(content)}`).load();
 };
 
 export const initDatatable = ({ ...content }) => {

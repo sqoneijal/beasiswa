@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
@@ -8,7 +8,6 @@ const ModalPerbaiki = () => {
    const { module, init } = useSelector((e) => e.redux);
    const { openModalPerbaiki, detailContent } = module;
    const dispatch = useDispatch();
-   console.log(detailContent);
 
    // bool
    const [isSubmit, setIsSubmit] = useState(false);
@@ -16,6 +15,11 @@ const ModalPerbaiki = () => {
    // object
    const [input, setInput] = useState({});
    const [errors, setErrors] = useState({});
+
+   useLayoutEffect(() => {
+      if (openModalPerbaiki && h.objLength(detailContent)) setInput({ catatan_perbaikan: h.parse("catatan_perbaikan", detailContent) });
+      return () => {};
+   }, [openModalPerbaiki, detailContent]);
 
    const clearProps = () => {
       setInput({});

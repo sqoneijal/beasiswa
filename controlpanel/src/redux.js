@@ -6,6 +6,7 @@ export const redux = createSlice({
       init: {},
       module: {},
       position: [],
+      filter: {},
    },
    reducers: {
       setInit: (state, { payload } = action) => {
@@ -17,7 +18,10 @@ export const redux = createSlice({
       setModule: (state, { payload } = action) => {
          state.module = payload;
       },
+      setFilter: (state, { payload } = action) => {
+         state.filter = payload;
+      },
    },
 });
-export const { init, setInit, setModule, position } = redux.actions;
+export const { init, setInit, setModule, position, setFilter } = redux.actions;
 export default redux.reducer;

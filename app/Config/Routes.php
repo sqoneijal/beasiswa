@@ -5,6 +5,8 @@ $routes = service('routes');
 function beasiswaPendaftar($routes): void
 {
    $routes->group('pendaftar', function ($routes) {
+      $routes->get('initpage', 'Pendaftar::initPage');
+
       $routes->post('getdata', 'Pendaftar::getData');
       $routes->post('getdetail', 'Pendaftar::getDetail');
       $routes->post('submitperbaiki', 'Pendaftar::submitPerbaiki');
