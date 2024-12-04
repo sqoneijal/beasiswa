@@ -8,7 +8,7 @@ import { setFilter, setModule } from "~/redux";
 const Lists = React.lazy(() => import("./Lists"));
 const Detail = React.lazy(() => import("./detail/Context"));
 
-const Context = () => {
+const Context = ({ setPageTypeButton }) => {
    const { module, filter } = useSelector((e) => e.redux);
    const { openDetail } = module;
    const dispatch = useDispatch();
@@ -60,11 +60,13 @@ const Context = () => {
       />
    );
 
+   const props = { setPageTypeButton };
+
    return isLoading
       ? loader
       : h.objLength(filter) && (
            <React.Suspense fallback={loader}>
-              <Card className="shadow-sm">{openDetail ? <Detail /> : <Lists />}</Card>
+              <Card className="shadow-sm">{openDetail ? <Detail {...props} /> : <Lists {...props} />}</Card>
            </React.Suspense>
         );
 };

@@ -486,6 +486,21 @@ export const confirmDelete = async ({ ...content }) => {
    return res.isConfirmed ? hapus(content.url, content.id, content.custom) : { data: { status: false, msg_response: "Data batal dihapus." } };
 };
 
+export const confirm = async (message) => {
+   return await Swal.fire({
+      text: message,
+      icon: "warning",
+      showCancelButton: true,
+      buttonsStyling: false,
+      confirmButtonText: "Iya",
+      cancelButtonText: "Tidak",
+      customClass: {
+         confirmButton: "btn btn-sm fw-bold btn-primary",
+         cancelButton: "btn btn-sm fw-bold btn-danger",
+      },
+   });
+};
+
 const hapus = async (url, id, custom = {}) => {
    const formData = {
       id,

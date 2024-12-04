@@ -4,26 +4,16 @@ namespace App\Controllers\Beasiswa;
 
 use App\Controllers\BaseController;
 use App\Libraries\Sevima;
-use App\Models\Beasiswa\Pendaftar as Model;
-use App\Validation\Beasiswa\Pendaftar as Validate;
+use App\Models\Beasiswa\PerbaikiBerkas as Model;
+use App\Validation\Beasiswa\PerbaikiBerkas as Validate;
 
-class Pendaftar extends BaseController
+class PerbaikiBerkas extends BaseController
 {
 
    public function submitTerima(): object
    {
       $model = new Model();
       $content = $model->submitTerima($this->post);
-      return $this->respond($content);
-   }
-
-   public function initPage(): object
-   {
-      $sevima = new Sevima();
-
-      $content = [
-         'daftarPeriode' => $sevima->getPeriode(),
-      ];
       return $this->respond($content);
    }
 
@@ -48,6 +38,16 @@ class Pendaftar extends BaseController
    {
       $model = new Model();
       $content = $model->getDetail($this->post['nim'], $this->post['periode']);
+      return $this->respond($content);
+   }
+
+   public function initPage(): object
+   {
+      $sevima = new Sevima();
+
+      $content = [
+         'daftarPeriode' => $sevima->getPeriode(),
+      ];
       return $this->respond($content);
    }
 

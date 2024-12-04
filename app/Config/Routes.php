@@ -10,6 +10,19 @@ function beasiswaPendaftar($routes): void
       $routes->post('getdata', 'Pendaftar::getData');
       $routes->post('getdetail', 'Pendaftar::getDetail');
       $routes->post('submitperbaiki', 'Pendaftar::submitPerbaiki');
+      $routes->post('submitterima', 'Pendaftar::submitTerima');
+   });
+}
+
+function beasiswaPerbaikiBerkas($routes): void
+{
+   $routes->group('perbaikiberkas', function ($routes) {
+      $routes->get('initpage', 'PerbaikiBerkas::initPage');
+
+      $routes->post('getdata', 'PerbaikiBerkas::getData');
+      $routes->post('getdetail', 'PerbaikiBerkas::getDetail');
+      $routes->post('submitperbaiki', 'PerbaikiBerkas::submitPerbaiki');
+      $routes->post('submitterima', 'PerbaikiBerkas::submitTerima');
    });
 }
 
@@ -17,6 +30,7 @@ function beasiswa($routes): void
 {
    $routes->group('beasiswa', ['namespace' => 'App\Controllers\Beasiswa'], function ($routes) {
       beasiswaPendaftar($routes);
+      beasiswaPerbaikiBerkas($routes);
    });
 }
 beasiswa($routes);

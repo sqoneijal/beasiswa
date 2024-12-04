@@ -15,21 +15,26 @@ const OrangTua = React.lazy(() => import("./OrangTua"));
 const Wali = React.lazy(() => import("./Wali"));
 const Sekolah = React.lazy(() => import("./Sekolah"));
 const InformasiPendaftaran = React.lazy(() => import("./InformasiPendaftaran"));
+const CatatanPerbaikan = React.lazy(() => import("./CatatanPerbaikan"));
 const ModalPerbaiki = React.lazy(() => import("./ModalPerbaiki"));
 
 const Context = ({ setPageTypeButton }) => {
    const { module, init } = useSelector((e) => e.redux);
-   const { biodata, tabActive, detailContent, openDetail } = module;
+   const { openDetail, detailContent, biodata, tabActive } = module;
    const dispatch = useDispatch();
 
    // bool
    const [isLoading, setIsLoading] = useState(true);
    const [isSubmit, setIsSubmit] = useState(false);
 
+   const kebutuhanKhusus = (value) => {
+      return value === 1 ? "Iya" : "Tidak";
+   };
+
    const getData = (nim, periode) => {
       const formData = { nim, periode };
 
-      const fetch = h.post(`/beasiswa/pendaftar/getdetail`, formData);
+      const fetch = h.post(`/beasiswa/perbaikiberkas/getdetail`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 
@@ -73,10 +78,6 @@ const Context = ({ setPageTypeButton }) => {
       />
    );
 
-   const kebutuhanKhusus = (value) => {
-      return value === 1 ? "Iya" : "Tidak";
-   };
-
    const tabsArray = [
       { label: "Informasi Umum", value: "informasi-umum" },
       { label: "Domisili", value: "domisili" },
@@ -84,6 +85,7 @@ const Context = ({ setPageTypeButton }) => {
       { label: "Wali", value: "wali" },
       { label: "Sekolah", value: "sekolah" },
       { label: "Informasi Pendaftaran", value: "informasi-pendaftaran" },
+      { label: "Catatan Perbaikan", value: "catatan-perbaikan" },
    ];
 
    const handleTerima = () => {
@@ -180,13 +182,23 @@ const Context = ({ setPageTypeButton }) => {
                            <Case value="informasi-pendaftaran">
                               <InformasiPendaftaran />
                            </Case>
+                           <Case value="catatan-perbaikan">
+                              <CatatanPerbaikan />
+                           </Case>
                         </Switch>
                      </div>
                   </React.Suspense>
                   <ButtonGroup className="mt-10">
                      <ModalPerbaiki />
                      {h.buttons("Terima", isSubmit, {
-                        onClick: () => (isSubmit ? null : handleTerima()),
+                        onClick: () => {
+                           const confirm = h.confirm("Apakah anda yakin ingin menyetujui perbaikan berkas ini?");
+                           confirm.then((res) => {
+                              const { isConfirmed } = res;
+                              if (!isConfirmed) return;
+                              handleTerima();
+                           });
+                        },
                      })}
                      {h.buttons("Perbaiki", false, {
                         variant: "warning",

@@ -8,7 +8,7 @@ moment.locale("id");
 
 let datatable;
 
-const Lists = () => {
+const Lists = ({ setPageTypeButton }) => {
    const { filter, module } = useSelector((e) => e.redux);
    const { daftarPeriode } = module;
    const dispatch = useDispatch();
@@ -73,6 +73,7 @@ const Lists = () => {
    });
 
    useLayoutEffect(() => {
+      setPageTypeButton("");
       datatable.init();
       return () => {};
    }, []);

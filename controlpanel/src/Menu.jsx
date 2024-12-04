@@ -6,10 +6,9 @@ import { Each } from "~/Each";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
 
-const ParentMenus = ({ children, eventKey, callback }) => {
-   const { module } = useSelector((e) => e.redux);
-   const { accordionEventKey } = module;
+let accordionEventKey = null;
 
+const ParentMenus = ({ children, eventKey, callback }) => {
    const { activeEventKey } = useContext(AccordionContext);
    const decoratedOnClick = useAccordionButton(eventKey, () => callback?.(eventKey));
 
@@ -23,12 +22,13 @@ const ParentMenus = ({ children, eventKey, callback }) => {
 };
 
 const Menu = ({ setPageTypeButton }) => {
-   const dispatch = useDispatch();
+   const { module } = useSelector((e) => e.redux);
    const location = useLocation();
+   const dispatch = useDispatch();
 
    useLayoutEffect(() => {
       const getEventKey = location.pathname.split("/")[1];
-      dispatch(setModule({ accordionEventKey: `/${getEventKey}` }));
+      accordionEventKey = `/${getEventKey}`;
       return () => {};
    }, [location]);
 
@@ -88,6 +88,7 @@ const Menu = ({ setPageTypeButton }) => {
          ],
       },
       { label: "Periode", pathname: "/periode", icon: "menu-icon tf-icons ti ti-smart-home", sub: false },
+      { label: "Pengguna", pathname: "/pengguna", icon: "menu-icon tf-icons ti ti-smart-home", sub: false },
    ];
 
    const resetRedux = (pathname, parentEventKey) => {
@@ -97,8 +98,9 @@ const Menu = ({ setPageTypeButton }) => {
          return;
       }
 
-      dispatch(setModule({ accordionEventKey: parentEventKey }));
+      accordionEventKey = parentEventKey;
       setPageTypeButton("");
+      dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
    };
 
    return (

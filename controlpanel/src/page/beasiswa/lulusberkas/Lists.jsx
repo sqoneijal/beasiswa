@@ -1,20 +1,16 @@
-import moment from "moment";
 import React, { useLayoutEffect } from "react";
 import { Table } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as h from "~/Helpers";
-import { setFilter, setModule } from "~/redux";
-moment.locale("id");
+import { setFilter } from "~/redux";
 
 let datatable;
 
-const Lists = ({ setPageTypeButton }) => {
-   const { filter, module } = useSelector((e) => e.redux);
-   const { daftarPeriode } = module;
-   const dispatch = useDispatch();
+const Lists = () => {
+   const { filter } = useSelector((e) => e.redux);
 
-   const base_url_datatable = "/beasiswa/perbaikiberkas/getdata";
-   const datatable_url = `${base_url_datatable}?${h.serialize(filter)}`;
+   const dt_base_url = "/beasiswa/lulusberkas/getdata";
+   const datatable_url = `/${dt_base_url}?${h.serialize(filter)}`;
    datatable = h.initDatatable({
       show_edit_button: false,
       show_delete_button: false,
@@ -27,22 +23,13 @@ const Lists = ({ setPageTypeButton }) => {
             targets: 4,
             data: null,
             render: (data) => {
-               return data.modified && moment(h.parse("modified", data)).format("DD MMMM YYYY");
+               return moment(h.parse("uploaded", data)).format("DD MMMM YYYY");
             },
          },
          { targets: 4, data: null, visible: true },
       ],
       columnDefs: true,
-      orders: [[3, "asc"]],
-      createdRow: (row, data) => {
-         const _view = row.querySelector("#view");
-         if (_view) {
-            _view.onclick = (e) => {
-               e.preventDefault();
-               dispatch(setModule({ ...module, openDetail: true, detailContent: data }));
-            };
-         }
-      },
+      createdRow: (row, data) => {},
       initComplete: () => {
          const container = document.querySelector("div.custom_filter");
 
@@ -73,7 +60,6 @@ const Lists = ({ setPageTypeButton }) => {
    });
 
    useLayoutEffect(() => {
-      setPageTypeButton("");
       datatable.init();
       return () => {};
    }, []);
@@ -86,7 +72,7 @@ const Lists = ({ setPageTypeButton }) => {
                   <th>nim</th>
                   <th>nama</th>
                   <th>jenis beasiswa</th>
-                  <th>tanggal perbaiki</th>
+                  <th>tanggal daftar</th>
                   <th />
                </tr>
             </thead>

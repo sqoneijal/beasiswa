@@ -6,7 +6,7 @@ use App\Models\Common;
 use App\Libraries\Sevima;
 use CodeIgniter\Database\RawSql;
 
-class Pendaftar extends Common
+class PerbaikiBerkas extends Common
 {
 
    public function submitTerima(array $post): array
@@ -172,8 +172,7 @@ class Pendaftar extends Common
       $table = $this->db->table('tb_pendaftar tp');
       $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
-      $table->where('tp.perbaiki', false);
-      $table->where('tp.sudah_divalidasi', false);
+      $table->where('tp.perbaiki', true);
 
       $this->dt_where($table, [
          'tp.periode' => @$post['periode'],
@@ -191,18 +190,17 @@ class Pendaftar extends Common
    private function queryData($post = [])
    {
       $table = $this->db->table('tb_pendaftar tp');
-      $table->select('tp.id, tp.nim, tp.nama, tmjb.nama as jenis_beasiswa, tp.uploaded, tp.periode, tp.catatan_perbaikan');
+      $table->select('tp.id, tp.nim, tp.nama, tmjb.nama as jenis_beasiswa, tp.modified, tp.periode, tp.catatan_perbaikan');
       $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
-      $table->where('tp.perbaiki', false);
-      $table->where('tp.sudah_divalidasi', false);
+      $table->where('tp.perbaiki', true);
 
       $this->dt_where($table, [
          'tp.periode' => @$post['periode'],
       ]);
 
       $this->datatableColumnSearch($table, ['tp.nim']);
-      $this->datatableColumnOrder($table, ['nim', 'nama', 'jenis_beasiswa', 'uploaded']);
+      $this->datatableColumnOrder($table, ['nim', 'nama', 'jenis_beasiswa', 'modified']);
 
       return $table;
    }
