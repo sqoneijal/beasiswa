@@ -1,16 +1,20 @@
+import moment from "moment";
 import React, { useLayoutEffect } from "react";
 import { Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
-import { setFilter } from "~/redux";
+import { setFilter, setModule } from "~/redux";
+moment.locale("id");
 
 let datatable;
 
-const Lists = () => {
-   const { filter } = useSelector((e) => e.redux);
+const Lists = ({ setPageTypeButton }) => {
+   const { filter, module } = useSelector((e) => e.redux);
+   const { daftarPeriode } = module;
+   const dispatch = useDispatch();
 
-   const dt_base_url = "/beasiswa/lulusberkas/getdata";
-   const datatable_url = `/${dt_base_url}?${h.serialize(filter)}`;
+   const base_url_datatable = "/beasiswa/lulusberkas/getdata";
+   const datatable_url = `/${base_url_datatable}?${h.serialize(filter)}`;
    datatable = h.initDatatable({
       show_edit_button: false,
       show_delete_button: false,
@@ -23,13 +27,21 @@ const Lists = () => {
             targets: 4,
             data: null,
             render: (data) => {
-               return moment(h.parse("uploaded", data)).format("DD MMMM YYYY");
+               return moment(h.parse("modified", data)).format("DD MMMM YYYY");
             },
          },
          { targets: 4, data: null, visible: true },
       ],
       columnDefs: true,
-      createdRow: (row, data) => {},
+      createdRow: (row, data) => {
+         const _view = row.querySelector("#view");
+         if (_view) {
+            _view.onclick = (e) => {
+               e.preventDefault();
+               dispatch(setModule({ ...module, openDetail: true, detailContent: data }));
+            };
+         }
+      },
       initComplete: () => {
          const container = document.querySelector("div.custom_filter");
 
@@ -60,6 +72,7 @@ const Lists = () => {
    });
 
    useLayoutEffect(() => {
+      setPageTypeButton("");
       datatable.init();
       return () => {};
    }, []);
@@ -72,7 +85,7 @@ const Lists = () => {
                   <th>nim</th>
                   <th>nama</th>
                   <th>jenis beasiswa</th>
-                  <th>tanggal daftar</th>
+                  <th>tanggal</th>
                   <th />
                </tr>
             </thead>

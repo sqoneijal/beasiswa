@@ -26,11 +26,24 @@ function beasiswaPerbaikiBerkas($routes): void
    });
 }
 
+function beasiswaLulusBerkas($routes): void
+{
+   $routes->group('lulusberkas', function ($routes) {
+      $routes->get('initpage', 'LulusBerkas::initPage');
+
+      $routes->post('getdata', 'LulusBerkas::getData');
+      $routes->post('getdetail', 'LulusBerkas::getDetail');
+      $routes->post('submitperbaiki', 'LulusBerkas::submitPerbaiki');
+      $routes->post('submitterima', 'LulusBerkas::submitTerima');
+   });
+}
+
 function beasiswa($routes): void
 {
    $routes->group('beasiswa', ['namespace' => 'App\Controllers\Beasiswa'], function ($routes) {
       beasiswaPendaftar($routes);
       beasiswaPerbaikiBerkas($routes);
+      beasiswaLulusBerkas($routes);
    });
 }
 beasiswa($routes);
