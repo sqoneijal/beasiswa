@@ -2,6 +2,14 @@
 
 $routes = service('routes');
 
+function pengguna($routes): void
+{
+   $routes->group('pengguna', function ($routes) {
+      $routes->post('submit', 'Pengguna::submit');
+   });
+}
+pengguna($routes);
+
 function beasiswaPendaftar($routes): void
 {
    $routes->group('pendaftar', function ($routes) {
@@ -61,6 +69,8 @@ tentang($routes);
 function informasi($routes): void
 {
    $routes->group('informasi', function ($routes) {
+      $routes->get('getinformasiterbaru', 'Informasi::getInformasiTerbaru');
+
       $routes->post('submit', 'Informasi::submit');
       $routes->post('getdata', 'Informasi::getData');
       $routes->post('hapus', 'Informasi::hapus');
@@ -84,6 +94,8 @@ generateBeasiswa($routes);
 function periode($routes): void
 {
    $routes->group('periode', function ($routes) {
+      $routes->get('periodeaktif', 'Periode::periodeAktif');
+
       $routes->post('getdata', 'Periode::getData');
    });
 }
@@ -138,6 +150,7 @@ function mahasiswaBiodata($routes): void
 {
    $routes->group('biodata', function ($routes) {
       $routes->post('getdata', 'Biodata::getData');
+      $routes->post('getstatuspendaftaran', 'Biodata::getStatusPendaftaranBeasiswa');
    });
 }
 

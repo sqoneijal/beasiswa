@@ -403,17 +403,7 @@ export const form_multiple = (label, name, labelSize = 2, config = {}, errors = 
             {label}
          </label>
          <Col sm={12 - labelSize}>
-            <Typeahead
-               id={uniqueID}
-               labelKey={name}
-               multiple
-               // onChange={setMultiSelections}
-               // options={options}
-               placeholder={label}
-               // selected={multiSelections}
-               {...config}
-               isInvalid={is_invalid(name, errors)}
-            />
+            <Typeahead id={uniqueID} labelKey={name} multiple placeholder={label} {...config} isInvalid={is_invalid(name, errors)} />
             {msg_response(name, errors)}
          </Col>
       </Row>

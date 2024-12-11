@@ -7,6 +7,30 @@ use CodeIgniter\Database\RawSql;
 class Informasi extends Common
 {
 
+   public function getInformasiTerbaru(): array
+   {
+      $table = $this->db->table('tb_berita');
+      $table->orderBy('id', 'DESC');
+      $table->limit(9);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            if ($field === 'content') {
+               $response[$key][$field] = word_limiter(strip_tags(html_entity_decode($val[$field])), 20);
+            } else {
+               $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+            }
+         }
+      }
+      return $response;
+   }
+
    public function getDetailBerita(string $slug): array
    {
       $table = $this->db->table('tb_berita tb');

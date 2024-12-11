@@ -20,6 +20,19 @@ class Sevima
       ]);
    }
 
+   public function getPeriodeAktif(): array
+   {
+      $req = $this->curl->request('GET', 'periode?f-is_aktif=1');
+      $body = json_decode($req->getBody(), true);
+
+      $results = [];
+      foreach ($body['data'] as $row) {
+         $results[] = $row['attributes'];
+      }
+
+      return current($results);
+   }
+
    public function getPeriode(): array
    {
       $req = $this->curl->request('GET', 'periode');

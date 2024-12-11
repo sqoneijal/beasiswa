@@ -98,9 +98,9 @@ const Menu = ({ setPageTypeButton }) => {
          return;
       }
 
-      accordionEventKey = parentEventKey;
       setPageTypeButton("");
-      dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
+      accordionEventKey = parentEventKey;
+      dispatch(setModule({ ...module, openDetail: false, detailContent: {}, pageType: "" }));
    };
 
    return (

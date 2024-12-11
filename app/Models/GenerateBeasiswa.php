@@ -8,6 +8,61 @@ use App\Libraries\Sevima;
 class GenerateBeasiswa extends Common
 {
 
+   public function getStatusPendaftaranBeasiswa(array $post): array
+   {
+      $pendaftar = $this->queryPendaftar($post);
+
+      return [
+         'pendaftar' => $pendaftar,
+         'lampiranUpload' => $this->queryLampiranUpload($pendaftar['id_generate_beasiswa']),
+         'lampiranYangDiupload' => $this->getDataLampiranUpload($post['nim']),
+      ];
+   }
+
+   private function queryLampiranUpload(int $id_generate_beasiswa): array
+   {
+      $table = $this->db->table('tb_lampiran_upload tlu');
+      $table->select('tmlu.id, tmlu.nama');
+      $table->join('tb_mst_lampiran_upload tmlu', 'tmlu.id = tlu.id_lampiran_upload');
+      $table->where('tlu.id_generate_beasiswa', $id_generate_beasiswa);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
+   private function queryPendaftar(array $post)
+   {
+      $table = $this->db->table('tb_pendaftar tp');
+      $table->select('tp.id as id_pendaftar, tp.periode, tp.nim, tp.id_generate_beasiswa, tp.uploaded, tp.status_diterima, tp.is_aktif, tp.sudah_divalidasi, tp.nama, tp.perbaiki, tp.catatan_perbaikan, tp.tanggal_validasi, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as nama_jenis_beasiswa, tmjb.keterangan as keterangan_jenis_beasiswa');
+      $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
+      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
+      $table->where('tp.nim', $post['nim']);
+      $table->where('tp.periode', $post['periode']);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
    public function submitDaftar(array $post): array
    {
       try {
@@ -19,7 +74,8 @@ class GenerateBeasiswa extends Common
                'nim' => $post['nim'],
                'periode' => $post['periode'],
                'id_generate_beasiswa' => $post['id_generate_beasiswa'],
-               'uploaded' => new RawSql('now()')
+               'uploaded' => new RawSql('now()'),
+               'nama' => $post['nama']
             ]);
          }
          return ['status' => true, 'content' => '', 'msg_response' => 'Pendaftaran berhasil.'];
@@ -75,7 +131,7 @@ class GenerateBeasiswa extends Common
       return $table->countAllResults() > 0;
    }
 
-   private function getDetailGenerateBeasiswa(int $id_generate_beasiswa): array
+   private function getDetailGenerateBeasiswa(int $id_generate_beasiswa = null): array
    {
       $table = $this->db->table('tb_generate_beasiswa tgb');
       $table->select('tgb.id, tgb.periode, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as jenis_kategori_beasiswa, tmjb.keterangan as keterangan_kategori_beasiswa');
@@ -101,24 +157,28 @@ class GenerateBeasiswa extends Common
       return $response;
    }
 
-   public function getLampiranToUpload(int $id_generate_beasiswa): array
+   public function getLampiranToUpload(int|string $id_generate_beasiswa = null): array
    {
-      $table = $this->db->table('tb_lampiran_upload tlu');
-      $table->select('tmlu.id, tmlu.nama');
-      $table->join('tb_mst_lampiran_upload tmlu', 'tmlu.id = tlu.id_lampiran_upload');
-      $table->where('tlu.id_generate_beasiswa', $id_generate_beasiswa);
-
-      $get = $table->get();
-      $result = $get->getResultArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
       $response = [];
-      foreach ($result as $key => $val) {
-         foreach ($fieldNames as $field) {
-            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+      if ($id_generate_beasiswa) {
+         $table = $this->db->table('tb_lampiran_upload tlu');
+         $table->select('tmlu.id, tmlu.nama');
+         $table->join('tb_mst_lampiran_upload tmlu', 'tmlu.id = tlu.id_lampiran_upload');
+         $table->where('tlu.id_generate_beasiswa', $id_generate_beasiswa);
+
+         $get = $table->get();
+         $result = $get->getResultArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+
+         foreach ($result as $key => $val) {
+            foreach ($fieldNames as $field) {
+               $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+            }
          }
       }
+
       return $response;
    }
 
@@ -140,22 +200,25 @@ class GenerateBeasiswa extends Common
 
    public function getStatusPendaftaran(array $post): array
    {
-      $table = $this->db->table('tb_pendaftar');
-      $table->where('nim', $post['nim']);
-      $table->where('periode', $post['periode']);
-      $table->where('id_generate_beasiswa', $post['id_generate_beasiswa']);
-
-      $get = $table->get();
-      $data = $get->getRowArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
       $response = [];
-      if (isset($data)) {
-         foreach ($fieldNames as $field) {
-            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+      if (@$post['id_generate_beasiswa']) {
+         $table = $this->db->table('tb_pendaftar');
+         $table->where('nim', $post['nim']);
+         $table->where('periode', $post['periode']);
+         $table->where('id_generate_beasiswa', @$post['id_generate_beasiswa']);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
          }
       }
+
       return $response;
    }
 
@@ -166,7 +229,7 @@ class GenerateBeasiswa extends Common
          $table->where('id', $post['id']);
          $table->delete();
 
-         return ['status' => true, 'content' => '', 'msg_response' => 'Data berhasil dihapus.'];
+         return ['status' => true, 'msg_response' => 'Data berhasil dihapus.'];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }

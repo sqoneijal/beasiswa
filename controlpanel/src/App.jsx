@@ -24,6 +24,7 @@ import "~/assets/css/08-toastr.css";
 import "~/assets/css/09-flatpickr.css";
 import "~/assets/css/10-Typeahead.css";
 import "~/assets/css/11-Typeahead.bs5.css";
+import "~/assets/css/google_fonts.css";
 
 const Menu = React.lazy(() => import("./Menu"));
 const Routing = React.lazy(() => import("./Routing"));

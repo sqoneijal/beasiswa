@@ -100,4 +100,11 @@ class Informasi extends BaseController
       ];
       return $this->respond($output);
    }
+
+   public function getInformasiTerbaru()
+   {
+      $model = new Model();
+      $content = $model->getInformasiTerbaru();
+      return $this->respond($content);
+   }
 }

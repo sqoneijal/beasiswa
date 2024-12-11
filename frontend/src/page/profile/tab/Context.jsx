@@ -9,6 +9,7 @@ const Biodata = React.lazy(() => import("./biodata/Context"));
 const Khs = React.lazy(() => import("./Khs"));
 const Transkrip = React.lazy(() => import("./Transkrip"));
 const LampiranUpload = React.lazy(() => import("./LampiranUpload"));
+const Beasiswa = React.lazy(() => import("./Beasiswa"));
 
 const Context = () => {
    const { module } = useSelector((e) => e.redux);
@@ -48,11 +49,8 @@ const Context = () => {
                   <Case value="transkrip">
                      <Transkrip />
                   </Case>
-                  <Case value="ekonomi">
-                     <span>ekonomi</span>
-                  </Case>
-                  <Case value="prestasi">
-                     <span>prestasi</span>
+                  <Case value="beasiswa">
+                     <Beasiswa />
                   </Case>
                   <Case value="lampiran">
                      <LampiranUpload />

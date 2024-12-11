@@ -9,6 +9,7 @@ const InformasiRead = React.lazy(() => import("./page/informasi/read/Detail"));
 const Beasiswa = React.lazy(() => import("./page/beasiswa/Context"));
 const BeasiswaDetail = React.lazy(() => import("./page/beasiswa/detail/Context"));
 const BeasiswaDaftar = React.lazy(() => import("./page/beasiswa/daftar/Context"));
+const Tentang = React.lazy(() => import("./page/tentang/Context"));
 
 const Routing = () => {
    const loader = (
@@ -34,6 +35,7 @@ const Routing = () => {
          <Route path="beasiswa" loader={loader} element={<Beasiswa />} />
          <Route path="beasiswa/read/:slug" loader={loader} element={<BeasiswaDetail />} />
          <Route path="beasiswa/daftar/:id_generate_beasiswa" loader={loader} element={<BeasiswaDaftar />} />
+         <Route path="tentang" loader={loader} element={<Tentang />} />
       </Routes>
    );
 };

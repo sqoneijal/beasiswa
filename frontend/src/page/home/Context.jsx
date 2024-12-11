@@ -18,15 +18,16 @@ const Context = () => {
    const [isLoading, setIsLoading] = useState(true);
 
    const initPage = () => {
-      const endpoints = [`${window.apiPath}/master/beasiswa/getdata`];
+      const endpoints = [`${window.apiPath}/master/beasiswa/getdata`, `${window.apiPath}/informasi/getinformasiterbaru`];
 
       axios
          .all(endpoints.map((endpoint) => axios.get(endpoint)))
          .then(
             axios.spread((...res) => {
                const masterBeasiswa = res[0];
+               const informasiTerbaru = res[1];
 
-               dispatch(setModule({ ...module, daftarMasterBeasiswa: masterBeasiswa.data }));
+               dispatch(setModule({ ...module, daftarMasterBeasiswa: masterBeasiswa.data, informasiTerbaru: informasiTerbaru.data }));
             })
          )
          .finally(() => {

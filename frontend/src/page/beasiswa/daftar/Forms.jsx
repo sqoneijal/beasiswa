@@ -42,7 +42,12 @@ const Forms = ({ initPage }) => {
    };
 
    const submitDaftar = () => {
-      const formData = { nim: init.preferred_username, id_generate_beasiswa, periode: h.parse("periode", generateBeasiswa) };
+      const formData = {
+         nim: init.preferred_username,
+         id_generate_beasiswa,
+         periode: h.parse("periode", generateBeasiswa),
+         nama: init.name,
+      };
 
       setIsSubmit(true);
       const fetch = h.post(`/generatebeasiswa/daftar`, formData);

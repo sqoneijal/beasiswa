@@ -28,12 +28,19 @@ class Biodata extends BaseController
          [
             'statusPendaftaranBeasiswa' => $model->getStatusPendaftaran([
                'nim' => $this->post['nim'],
-               'id_generate_beasiswa' => $this->post['id_generate_beasiswa'],
+               'id_generate_beasiswa' => @$this->post['id_generate_beasiswa'],
                'periode' => $periodeAktif
             ]),
             'lampiranYangDiupload' => $model->getDataLampiranUpload($this->post['nim']),
-            'lampiranPerluDiupload' => $model->getLampiranToUpload($this->post['id_generate_beasiswa']),
+            'lampiranPerluDiupload' => $model->getLampiranToUpload(@$this->post['id_generate_beasiswa']),
          ]
       ));
+   }
+
+   public function getStatusPendaftaranBeasiswa(): object
+   {
+      $model = new Model();
+      $content = $model->getStatusPendaftaranBeasiswa($this->post);
+      return $this->respond($content);
    }
 }
