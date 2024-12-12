@@ -21,7 +21,8 @@ class LulusBerkas extends Common
             'perbaiki' => false,
             'status_diterima' => true,
             'is_aktif' => false,
-            'sudah_divalidasi' => true
+            'sudah_divalidasi' => true,
+            'status_wawancara' => true,
          ]);
          return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
@@ -62,7 +63,7 @@ class LulusBerkas extends Common
    private function getInformasiPendaftaranBeasiswa(string $nim, int $periode): array
    {
       $table = $this->db->table('tb_pendaftar tp');
-      $table->select('tp.id as id_pendaftar, tp.periode, tp.nim, tp.id_generate_beasiswa, tp.uploaded as tanggal_daftar, tp.status_diterima, tp.is_aktif, tp.sudah_divalidasi, tp.nama as nama_mahasiswa, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as nama_kategori_beasiswa, tmjb.keterangan as keterangan_kategori_beasiswa');
+      $table->select('tp.id as id_pendaftar, tp.periode, tp.nim, tp.id_generate_beasiswa, tp.uploaded as tanggal_daftar, tp.status_diterima, tp.is_aktif, tp.sudah_divalidasi, tp.nama as nama_mahasiswa, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as nama_kategori_beasiswa, tmjb.keterangan as keterangan_kategori_beasiswa, tp.catatan_perbaikan');
       $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
       $table->where('tp.nim', $nim);
@@ -174,6 +175,7 @@ class LulusBerkas extends Common
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
       $table->where('tp.sudah_divalidasi', true);
       $table->where('tp.status_diterima', true);
+      $table->where('tp.status_wawancara', false);
 
       $this->dt_where($table, [
          'tp.periode' => $post['periode'],
@@ -196,6 +198,7 @@ class LulusBerkas extends Common
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
       $table->where('tp.sudah_divalidasi', true);
       $table->where('tp.status_diterima', true);
+      $table->where('tp.status_wawancara', false);
 
       $this->dt_where($table, [
          'tp.periode' => $post['periode'],

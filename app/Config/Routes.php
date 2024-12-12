@@ -6,6 +6,7 @@ function pengguna($routes): void
 {
    $routes->group('pengguna', function ($routes) {
       $routes->post('submit', 'Pengguna::submit');
+      $routes->post('getdata', 'Pengguna::getData');
    });
 }
 pengguna($routes);
