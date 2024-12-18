@@ -85,6 +85,10 @@ const Menu = ({ setPageTypeButton }) => {
                label: "Tahap Wawancara",
                pathname: "/beasiswa/tahapwawancara",
             },
+            {
+               label: "Penerima",
+               pathname: "/beasiswa/penerima",
+            },
          ],
       },
       { label: "Periode", pathname: "/periode", icon: "menu-icon tf-icons ti ti-smart-home", sub: false },

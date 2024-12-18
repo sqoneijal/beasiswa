@@ -32,7 +32,7 @@ const ModalPerbaiki = () => {
       Object.keys(input).forEach((key) => (formData[key] = input[key]));
 
       setIsSubmit(true);
-      const fetch = h.post(`/beasiswa/lulusberkas/submitperbaiki`, formData);
+      const fetch = h.post(`/beasiswa/tahapwawancara/submitperbaiki`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 

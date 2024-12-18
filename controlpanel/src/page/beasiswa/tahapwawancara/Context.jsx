@@ -22,7 +22,7 @@ const Context = ({ setPageTypeButton }) => {
    };
 
    const initPage = () => {
-      const fetch = h.get(`/beasiswa/lulusberkas/initpage`);
+      const fetch = h.get(`/beasiswa/tahapwawancara/initpage`);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 

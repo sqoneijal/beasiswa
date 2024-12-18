@@ -18,10 +18,7 @@ class Pendaftar extends Common
             'tanggal_validasi' => new RawSql('now()'),
             'user_modified' => $post['user_modified'],
             'modified' => new RawSql('now()'),
-            'perbaiki' => false,
-            'status_diterima' => true,
-            'is_aktif' => false,
-            'sudah_divalidasi' => true
+            'id_status_pendaftaran' => 1
          ]);
          return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
@@ -38,10 +35,7 @@ class Pendaftar extends Common
             'catatan_perbaikan' => $post['catatan_perbaikan'],
             'tanggal_validasi' => new RawSql('now()'),
             'user_modified' => $post['user_modified'],
-            'perbaiki' => true,
-            'status_diterima' => false,
-            'is_aktif' => false,
-            'sudah_divalidasi' => true
+            'id_status_pendaftaran' => 2,
          ]);
          return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
@@ -62,7 +56,7 @@ class Pendaftar extends Common
    private function getInformasiPendaftaranBeasiswa(string $nim, int $periode): array
    {
       $table = $this->db->table('tb_pendaftar tp');
-      $table->select('tp.id as id_pendaftar, tp.periode, tp.nim, tp.id_generate_beasiswa, tp.uploaded as tanggal_daftar, tp.status_diterima, tp.is_aktif, tp.sudah_divalidasi, tp.nama as nama_mahasiswa, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as nama_kategori_beasiswa, tmjb.keterangan as keterangan_kategori_beasiswa');
+      $table->select('tp.id as id_pendaftar, tp.periode, tp.nim, tp.id_generate_beasiswa, tp.uploaded as tanggal_daftar, tp.is_aktif, tp.nama as nama_mahasiswa, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as nama_kategori_beasiswa, tmjb.keterangan as keterangan_kategori_beasiswa');
       $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
       $table->where('tp.nim', $nim);
@@ -172,8 +166,7 @@ class Pendaftar extends Common
       $table = $this->db->table('tb_pendaftar tp');
       $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
-      $table->where('tp.perbaiki', false);
-      $table->where('tp.sudah_divalidasi', false);
+      $table->where('tp.id_status_pendaftaran is null');
 
       $this->dt_where($table, [
          'tp.periode' => @$post['periode'],
@@ -194,8 +187,7 @@ class Pendaftar extends Common
       $table->select('tp.id, tp.nim, tp.nama, tmjb.nama as jenis_beasiswa, tp.uploaded, tp.periode, tp.catatan_perbaikan');
       $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
-      $table->where('tp.perbaiki', false);
-      $table->where('tp.sudah_divalidasi', false);
+      $table->where('tp.id_status_pendaftaran is null');
 
       $this->dt_where($table, [
          'tp.periode' => @$post['periode'],

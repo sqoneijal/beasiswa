@@ -79,7 +79,8 @@ const App = () => {
          .then((authenticated) => {
             if (authenticated) {
                keycloak.loadUserInfo().then((userInfo) => {
-                  const roleAdmin = keycloak.hasRealmRole("FUNG") || keycloak.hasRealmRole("ADM");
+                  const roleAdmin =
+                     keycloak.hasRealmRole("FUNG") || keycloak.hasRealmRole("ADM") || keycloak.hasRealmRole("DSN") || keycloak.hasRealmRole("STR");
                   const roleMahasiswa = keycloak.hasRealmRole("MHS");
 
                   if (roleAdmin) {

@@ -34,7 +34,7 @@ const Context = ({ setPageTypeButton }) => {
    const getData = (nim, periode) => {
       const formData = { nim, periode };
 
-      const fetch = h.post(`/beasiswa/lulusberkas/getdetail`, formData);
+      const fetch = h.post(`/beasiswa/tahapwawancara/getdetail`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 
@@ -95,7 +95,7 @@ const Context = ({ setPageTypeButton }) => {
       };
 
       setIsSubmit(true);
-      const fetch = h.post(`/beasiswa/lulusberkas/submitterima`, formData);
+      const fetch = h.post(`/beasiswa/tahapwawancara/submitterima`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 
@@ -190,7 +190,7 @@ const Context = ({ setPageTypeButton }) => {
                   </React.Suspense>
                   <ButtonGroup className="mt-10">
                      <ModalPerbaiki />
-                     {h.buttons("Lanjut Tahap Wawancara", isSubmit, {
+                     {h.buttons("Terima", isSubmit, {
                         onClick: () => {
                            const confirm = h.confirm("Apakah anda yakin ingin menyetujui?");
                            confirm.then((res) => {

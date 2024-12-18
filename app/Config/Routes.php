@@ -47,12 +47,27 @@ function beasiswaLulusBerkas($routes): void
    });
 }
 
+function beasiswaTahapWawancara($routes): void
+{
+   $routes->group('tahapwawancara', function ($routes) {
+      $routes->get('initpage', 'TahapWawancara::initPage');
+      $routes->get('downloadexcel', 'TahapWawancara::downloadExcel');
+
+      $routes->post('getdata', 'TahapWawancara::getData');
+      $routes->post('getdetail', 'TahapWawancara::getDetail');
+      $routes->post('submitperbaiki', 'TahapWawancara::submitPerbaiki');
+      $routes->post('submitperbaiki', 'TahapWawancara::submitPerbaiki');
+      $routes->post('grepdatafromsevima', 'TahapWawancara::grepDataFromSevima');
+   });
+}
+
 function beasiswa($routes): void
 {
    $routes->group('beasiswa', ['namespace' => 'App\Controllers\Beasiswa'], function ($routes) {
       beasiswaPendaftar($routes);
       beasiswaPerbaikiBerkas($routes);
       beasiswaLulusBerkas($routes);
+      beasiswaTahapWawancara($routes);
    });
 }
 beasiswa($routes);

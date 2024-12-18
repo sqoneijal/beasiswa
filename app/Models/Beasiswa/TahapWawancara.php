@@ -2,12 +2,32 @@
 
 namespace App\Models\Beasiswa;
 
-use App\Libraries\Sevima;
 use App\Models\Common;
 use CodeIgniter\Database\RawSql;
+use App\Libraries\Sevima;
 
-class LulusBerkas extends Common
+class TahapWawancara extends Common
 {
+
+   public function downloadExcel(): array
+   {
+      $table = $this->db->table('tb_pendaftar');
+      $table->where('id_status_pendaftaran', 3);
+      $table->limit(1);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
 
    public function submitTerima(array $post): array
    {
@@ -18,7 +38,7 @@ class LulusBerkas extends Common
             'tanggal_validasi' => new RawSql('now()'),
             'user_modified' => $post['user_modified'],
             'modified' => new RawSql('now()'),
-            'id_status_pendaftaran' => 3
+            'id_status_pendaftaran' => 4
          ]);
          return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
@@ -53,7 +73,7 @@ class LulusBerkas extends Common
       ];
    }
 
-   private function getInformasiPendaftaranBeasiswa(string $nim, int $periode): array
+   public function getInformasiPendaftaranBeasiswa(string $nim, int $periode): array
    {
       $table = $this->db->table('tb_pendaftar tp');
       $table->select('tp.id as id_pendaftar, tp.periode, tp.nim, tp.id_generate_beasiswa, tp.uploaded as tanggal_daftar, tp.is_aktif, tp.nama as nama_mahasiswa, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as nama_kategori_beasiswa, tmjb.keterangan as keterangan_kategori_beasiswa, tp.catatan_perbaikan');
@@ -168,8 +188,8 @@ class LulusBerkas extends Common
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
 
       $this->dt_where($table, [
-         'tp.id_status_pendaftaran' => 1,
          'tp.periode' => $post['periode'],
+         'tp.id_status_pendaftaran' => 3
       ]);
 
       return $table->countAllResults();
@@ -190,7 +210,7 @@ class LulusBerkas extends Common
 
       $this->dt_where($table, [
          'tp.periode' => $post['periode'],
-         'tp.id_status_pendaftaran' => 1
+         'tp.id_status_pendaftaran' => 3
       ]);
 
       $this->datatableColumnSearch($table, ['tp.nim']);
