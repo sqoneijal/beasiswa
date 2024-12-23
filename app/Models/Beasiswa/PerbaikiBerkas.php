@@ -49,6 +49,7 @@ class PerbaikiBerkas extends Common
 
       return [
          'biodata' => $sevima->getBiodataMahasiswa($nim),
+         'transkrip' => $sevima->getTranskripMahasiswa($nim),
          'informasiPendaftaran' => $this->getInformasiPendaftaranBeasiswa($nim, $periode),
       ];
    }

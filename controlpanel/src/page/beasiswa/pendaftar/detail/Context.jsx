@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useCallback, useLayoutEffect, useState } from "react";
 import { ButtonGroup, Card, Col, Nav, Row } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,47 +16,52 @@ const Wali = React.lazy(() => import("./Wali"));
 const Sekolah = React.lazy(() => import("./Sekolah"));
 const InformasiPendaftaran = React.lazy(() => import("./InformasiPendaftaran"));
 const ModalPerbaiki = React.lazy(() => import("./ModalPerbaiki"));
+const Transkrip = React.lazy(() => import("./Transkrip"));
 
 const Context = ({ setPageTypeButton }) => {
    const { module, init } = useSelector((e) => e.redux);
    const { biodata, tabActive, detailContent, openDetail } = module;
    const dispatch = useDispatch();
 
-   // bool
-   const [isLoading, setIsLoading] = useState(true);
-   const [isSubmit, setIsSubmit] = useState(false);
+   const [state, setState] = useState({
+      isLoading: true,
+      isSubmit: false,
+   });
 
-   const getData = (nim, periode) => {
-      const formData = { nim, periode };
+   const getData = useCallback(
+      async (nim, periode) => {
+         const formData = { nim, periode };
 
-      const fetch = h.post(`/beasiswa/pendaftar/getdetail`, formData);
-      fetch.then((res) => {
-         if (typeof res === "undefined") return;
+         try {
+            const res = await h.post(`/beasiswa/pendaftar/getdetail`, formData);
+            if (typeof res === "undefined") return;
 
-         const { data } = res;
-         if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
-            h.notification(false, h.parse("message", data));
-            return;
+            const { data } = res;
+            if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
+               h.notification(false, h.parse("message", data));
+               return;
+            }
+
+            dispatch(setModule({ ...module, ...data, tabActive: "informasi-umum" }));
+         } catch (error) {
+            console.error("Error fetching data:", error);
+         } finally {
+            setState((prevState) => ({ ...prevState, isLoading: false }));
          }
-
-         dispatch(setModule({ ...module, ...data, tabActive: "informasi-umum" }));
-      });
-      fetch.finally(() => {
-         setIsLoading(false);
-      });
-   };
+      },
+      [dispatch, module]
+   );
 
    useLayoutEffect(() => {
       if (openDetail && h.objLength(detailContent)) {
          setPageTypeButton(
-            h.buttons("Kembail", false, {
+            h.buttons("Kembali", false, {
                variant: "danger",
                onClick: () => dispatch(setModule({ ...module, openDetail: false, detailContent: {} })),
             })
          );
          getData(detailContent.nim, detailContent.periode);
       }
-      return () => {};
    }, [openDetail, detailContent]);
 
    const loader = (
@@ -83,6 +88,7 @@ const Context = ({ setPageTypeButton }) => {
       { label: "Orang Tua", value: "orang-tua" },
       { label: "Wali", value: "wali" },
       { label: "Sekolah", value: "sekolah" },
+      { label: "Transkrip", value: "transkrip" },
       { label: "Informasi Pendaftaran", value: "informasi-pendaftaran" },
    ];
 
@@ -114,7 +120,7 @@ const Context = ({ setPageTypeButton }) => {
       });
    };
 
-   return isLoading ? (
+   return state.isLoading ? (
       loader
    ) : (
       <Card.Body>
@@ -180,13 +186,16 @@ const Context = ({ setPageTypeButton }) => {
                            <Case value="informasi-pendaftaran">
                               <InformasiPendaftaran />
                            </Case>
+                           <Case value="transkrip">
+                              <Transkrip />
+                           </Case>
                         </Switch>
                      </div>
                   </React.Suspense>
                   <ButtonGroup className="mt-10">
                      <ModalPerbaiki />
-                     {h.buttons("Terima", isSubmit, {
-                        onClick: () => (isSubmit ? null : handleTerima()),
+                     {h.buttons("Terima", state.isSubmit, {
+                        onClick: () => (state.isSubmit ? null : handleTerima()),
                      })}
                      {h.buttons("Perbaiki", false, {
                         variant: "warning",

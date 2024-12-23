@@ -17,6 +17,7 @@ const Sekolah = React.lazy(() => import("./Sekolah"));
 const InformasiPendaftaran = React.lazy(() => import("./InformasiPendaftaran"));
 const CatatanPerbaikan = React.lazy(() => import("./CatatanPerbaikan"));
 const ModalPerbaiki = React.lazy(() => import("./ModalPerbaiki"));
+const Transkrip = React.lazy(() => import("./Transkrip"));
 
 const Context = ({ setPageTypeButton }) => {
    const { module, init } = useSelector((e) => e.redux);
@@ -84,6 +85,7 @@ const Context = ({ setPageTypeButton }) => {
       { label: "Orang Tua", value: "orang-tua" },
       { label: "Wali", value: "wali" },
       { label: "Sekolah", value: "sekolah" },
+      { label: "Transkrip", value: "transkrip" },
       { label: "Informasi Pendaftaran", value: "informasi-pendaftaran" },
       { label: "Catatan Perbaikan", value: "catatan-perbaikan" },
    ];
@@ -184,6 +186,9 @@ const Context = ({ setPageTypeButton }) => {
                            </Case>
                            <Case value="catatan-perbaikan">
                               <CatatanPerbaikan />
+                           </Case>
+                           <Case value="transkrip">
+                              <Transkrip />
                            </Case>
                         </Switch>
                      </div>

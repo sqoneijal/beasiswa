@@ -46,6 +46,19 @@ class Sevima
       return $results;
    }
 
+   public function getKRSMahasiswa(string $nim): array
+   {
+      $req = $this->curl->request('GET', 'mahasiswa/' . $nim . '/krs');
+      $body = json_decode($req->getBody(), true);
+
+      $data = [];
+      foreach ($body['data'] as $row) {
+         $data[] = $row['attributes'];
+      }
+
+      return $data;
+   }
+
    public function getBiodataMahasiswa(string $nim): array
    {
       $req = $this->curl->request('GET', 'mahasiswa/' . $nim);

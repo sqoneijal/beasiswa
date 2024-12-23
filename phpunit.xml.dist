@@ -1,0 +1,11 @@
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd">
+    <php>
+        <env name="CI_ENVIRONMENT" value="testing"/>
+    </php>
+    <bootstrap>vendor/autoload.php</bootstrap>
+    <testsuites>
+        <testsuite name="Application Test Suite">
+            <directory>./app/Tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
