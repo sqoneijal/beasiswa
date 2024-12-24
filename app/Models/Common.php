@@ -17,6 +17,63 @@ class Common extends Model
       $this->db = \Config\Database::connect('default');
    }
 
+   public function getPeriodeAktif(): array
+   {
+      $table = $this->db->table('tb_mst_periode');
+      $table->where('is_aktif', '1');
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
+   public function getBiodataMahasiswa(string $nim): array
+   {
+      $table = $this->db->table('tb_mahasiswa');
+      $table->where('nim', $nim);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
+   public function getDaftarPeriode(): array
+   {
+      $table = $this->db->table('tb_mst_periode');
+      $table->orderBy('id', 'desc');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
    public function datatableColumnOrder($table, $column_order = []): void
    {
       if (isset($_POST['order'])) {

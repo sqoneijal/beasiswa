@@ -72,18 +72,22 @@ const Context = () => {
                            <div className="course-item mb-30">
                               <div className="course-content">
                                  <h5 className="course-content-title text-center mt-10">
-                                    <Link to={`/beasiswa/read/${h.parse("nama", row).replace(" ", "-").toLowerCase()}`}>{h.parse("nama", row)}</Link>
+                                    <Link to={`/beasiswa/read/${h.parse("nama", row).replaceAll(" ", "-").toLowerCase()}`}>
+                                       {h.parse("nama", row)}
+                                    </Link>
                                  </h5>
                               </div>
                               <div className="course-hover-content">
                                  <h5 className="course-hover-content-title">
-                                    <Link to={`/beasiswa/read/${h.parse("nama", row).replace(" ", "-").toLowerCase()}`}>{h.parse("nama", row)}</Link>
+                                    <Link to={`/beasiswa/read/${h.parse("nama", row).replaceAll(" ", "-").toLowerCase()}`}>
+                                       {h.parse("nama", row)}
+                                    </Link>
                                  </h5>
                                  <p className="course-hover-content-text">{h.parse("keterangan", row)}</p>
                                  <div className="course-hover-content-btn">
                                     <div className="course-hover-cart-btn">
                                        <Link
-                                          to={`/beasiswa/read/${h.parse("nama", row).replace(" ", "-").toLowerCase()}`}
+                                          to={`/beasiswa/read/${h.parse("nama", row).replaceAll(" ", "-").toLowerCase()}`}
                                           className="theme-btn course-btn">
                                           Selengkapnya
                                        </Link>

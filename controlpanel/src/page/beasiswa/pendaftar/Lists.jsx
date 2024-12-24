@@ -56,7 +56,7 @@ const Lists = ({ setPageTypeButton }) => {
 
          sortedData.forEach((row) => {
             const option = document.createElement("option");
-            option.value = row.nama_singkat;
+            option.value = row.id;
             option.textContent = row.nama_periode;
             option.selected = row.nama_singkat === filter.periode;
             select.appendChild(option);

@@ -79,7 +79,7 @@ const Detail = () => {
                                  <div className="blog_details-author-info">
                                     <span>Posted at</span>
                                     <h5>
-                                       <Link to={`/beasiswa/kategori/${h.parse("jenis_beasiswa", detailBerita).replace(" ", "-").toLowerCase()}`}>
+                                       <Link to={`/beasiswa/kategori/${h.parse("jenis_beasiswa", detailBerita).replaceAll(" ", "-").toLowerCase()}`}>
                                           {h.parse("jenis_beasiswa", detailBerita)}
                                        </Link>
                                     </h5>

@@ -22,6 +22,7 @@ class Sevima
 
    public function getPeriodeAktif(): array
    {
+      sleep(3);
       $req = $this->curl->request('GET', 'periode?f-is_aktif=1');
       $body = json_decode($req->getBody(), true);
 
@@ -69,6 +70,7 @@ class Sevima
 
    public function getTranskripMahasiswa(string $nim): array
    {
+      sleep(3);
       $req = $this->curl->request('GET', 'mahasiswa/' . $nim . '/transkrip');
       $body = json_decode($req->getBody(), true);
 

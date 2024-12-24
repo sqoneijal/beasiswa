@@ -64,7 +64,7 @@ const Forms = ({ initPage }) => {
          initPage(id_generate_beasiswa, init.preferred_username);
 
          if (data.status) {
-            navigate(`/beasiswa/read/${h.parse("jenis_kategori_beasiswa", generateBeasiswa).replace(" ", "-").toLowerCase()}`);
+            navigate(`/beasiswa/read/${h.parse("jenis_kategori_beasiswa", generateBeasiswa).replaceAll(" ", "-").toLowerCase()}`);
          }
       });
       fetch.finally(() => {

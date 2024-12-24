@@ -31,6 +31,20 @@ const App = () => {
    // bool
    const [isLoading, setIsLoading] = useState(true);
 
+   const generateBiodataMahasiswa = (nim) => {
+      const formData = { nim };
+
+      const fetch = h.post(`/user/generatebiodatamahasiswa`, formData);
+      fetch.then((res) => {
+         if (typeof res === "undefined") return;
+
+         const { data } = res;
+         if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
+            h.notification(false, h.parse("message", data));
+         }
+      });
+   };
+
    const getAdminUserInfo = (username, userInfo) => {
       const formData = { username };
 
@@ -90,6 +104,10 @@ const App = () => {
                      userInfo["roleMahasiswa"] = roleMahasiswa;
 
                      dispatch(setInit(userInfo));
+
+                     if (roleMahasiswa) {
+                        generateBiodataMahasiswa(userInfo.preferred_username);
+                     }
                   }
                   setIsLoading(false);
                });

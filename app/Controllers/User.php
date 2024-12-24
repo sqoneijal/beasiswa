@@ -7,6 +7,13 @@ use App\Models\User as Model;
 
 class User extends BaseController
 {
+
+   public function generateBiodataMahasiswa(): void
+   {
+      $model = new Model();
+      $model->generateBiodataMahasiswa($this->post);
+   }
+
    public function getData()
    {
       $model = new Model();

@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
 
@@ -46,7 +47,7 @@ const Beasiswa = () => {
             return;
          }
 
-         getStatusPendaftaran(init.preferred_username, data.nama_singkat);
+         getStatusPendaftaran(init.preferred_username, data.id);
       });
    };
 
@@ -74,7 +75,20 @@ const Beasiswa = () => {
    ) : (
       <React.Suspense fallback={loader}>
          <Card className="shadow-sm">
-            <InformasiPendaftaranBeasiswa />
+            {h.arrLength(module.pendaftar) ? (
+               <InformasiPendaftaranBeasiswa />
+            ) : (
+               <Card.Body>
+                  <p>Anda belum mendaftar beasiswa.</p>
+                  <p>
+                     Klik{" "}
+                     <Link to={"/beasiswa"} className="text-info">
+                        disini
+                     </Link>{" "}
+                     untuk melihat daftar beasiswa yang dibuka.
+                  </p>
+               </Card.Body>
+            )}
          </Card>
       </React.Suspense>
    );

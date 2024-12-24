@@ -3,7 +3,6 @@
 namespace App\Controllers\Beasiswa;
 
 use App\Controllers\BaseController;
-use App\Libraries\Sevima;
 use App\Models\Beasiswa\Pendaftar as Model;
 use App\Validation\Beasiswa\Pendaftar as Validate;
 
@@ -19,10 +18,10 @@ class Pendaftar extends BaseController
 
    public function initPage(): object
    {
-      $sevima = new Sevima();
+      $model = new Model();
 
       $content = [
-         'daftarPeriode' => $sevima->getPeriode(),
+         'daftarPeriode' => $model->getDaftarPeriode(),
       ];
       return $this->respond($content);
    }

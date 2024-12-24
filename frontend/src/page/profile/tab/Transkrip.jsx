@@ -8,6 +8,10 @@ import * as h from "~/Helpers";
 const Transkrip = () => {
    const { init } = useSelector((e) => e.redux);
 
+   const [state, setState] = useState({
+      isLoadingSyncron: false,
+   });
+
    // bool
    const [isLoading, setIsLoading] = useState(true);
 
@@ -17,6 +21,28 @@ const Transkrip = () => {
    // string
    const [total_sks, setTotal_sks] = useState(0);
    const [total_bobot, setTotal_bobot] = useState(0);
+
+   const syncronTranskrip = (nim) => {
+      setState((prev) => ({ ...prev, isLoadingSyncron: true }));
+
+      const formData = { nim };
+
+      const fetch = h.post(`/mahasiswa/transkrip/syncrontranskrip`, formData);
+      fetch.then((res) => {
+         if (typeof res === "undefined") return;
+
+         const { data } = res;
+         if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
+            h.notification(false, h.parse("message", data));
+            return;
+         }
+
+         getData(nim);
+      });
+      fetch.finally(() => {
+         setState((prev) => ({ ...prev, isLoadingSyncron: false }));
+      });
+   };
 
    useLayoutEffect(() => {
       if (!isLoading) {
@@ -80,6 +106,19 @@ const Transkrip = () => {
    ) : (
       <Card>
          <Card.Body>
+            <p className="text-danger">
+               Jika ada perbedaan nilai atau bobot, silahkan{" "}
+               <a
+                  className="theme-btn"
+                  style={{ height: 30 }}
+                  onClick={(e) => {
+                     e.preventDefault();
+                     if (!state.isLoadingSyncron) syncronTranskrip(init.preferred_username);
+                  }}>
+                  {state.isLoadingSyncron ? `Loading...` : `klik disini`}
+               </a>{" "}
+               untuk melakukan syncron ulang dengan aplikasi sevima!
+            </p>
             <Table size="sm" responsive>
                <thead>
                   <tr>

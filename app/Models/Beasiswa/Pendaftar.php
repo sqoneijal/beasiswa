@@ -51,6 +51,8 @@ class Pendaftar extends Common
          'biodata' => $sevima->getBiodataMahasiswa($nim),
          'transkrip' => $sevima->getTranskripMahasiswa($nim),
          'informasiPendaftaran' => $this->getInformasiPendaftaranBeasiswa($nim, $periode),
+         'khs' => $sevima->getKHSMahasiswa($nim),
+         'tagihan' => []
       ];
    }
 

@@ -111,6 +111,7 @@ function periode($routes): void
 {
    $routes->group('periode', function ($routes) {
       $routes->get('periodeaktif', 'Periode::periodeAktif');
+      $routes->get('downloaddarisevima', 'Periode::downloadDariSevima');
 
       $routes->post('getdata', 'Periode::getData');
    });
@@ -144,6 +145,7 @@ $routes->group('referensi', ['namespace' => 'App\Controllers\Referensi'], functi
 function user($routes): void
 {
    $routes->post('getdata', 'User::getData');
+   $routes->post('generatebiodatamahasiswa', 'User::generateBiodataMahasiswa');
 }
 
 $routes->group('user', function ($routes) {
@@ -174,6 +176,7 @@ function mahasiswaKHS($routes): void
 {
    $routes->group('khs', function ($routes) {
       $routes->post('getdata', 'Khs::getData');
+      $routes->post('syncronkhs', 'Khs::syncronKHS');
    });
 }
 
@@ -181,6 +184,7 @@ function mahasiswaTranskrip($routes): void
 {
    $routes->group('transkrip', function ($routes) {
       $routes->post('getdata', 'Transkrip::getData');
+      $routes->post('syncrontranskrip', 'Transkrip::syncronTranskrip');
    });
 }
 

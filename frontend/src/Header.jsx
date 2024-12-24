@@ -25,7 +25,7 @@ const Header = () => {
    ];
 
    const clearRedux = () => {
-      dispatch(setModule({ daftarMasterBeasiswa }));
+      dispatch(setModule({ ...daftarMasterBeasiswa }));
    };
 
    const handleLogout = () => {
@@ -43,7 +43,7 @@ const Header = () => {
                   <Col xl={3} sm={7} className="col-6">
                      <div className="h2_header-left">
                         <div className="h2_header-logo">
-                           <Link to="/" onClick={clearRedux}>
+                           <Link to="/">
                               <img className="lozad" data-src={logo} alt="beasiswa uin ar-raniry" style={{ width: 132, height: 44 }} />
                            </Link>
                         </div>

@@ -5,12 +5,9 @@ import { Each } from "~/Each";
 import * as h from "~/Helpers";
 moment.locale("id");
 
-const Lists = () => {
+const Lists = ({ state, setState }) => {
    // bool
    const [isLoading, setIsLoading] = useState(true);
-
-   // array
-   const [content, setContent] = useState([]);
 
    const getData = () => {
       const formData = {};
@@ -26,7 +23,7 @@ const Lists = () => {
             return;
          }
 
-         setContent(data);
+         setState((prevState) => ({ ...prevState, refreshList: false, content: data }));
       });
       fetch.finally(() => {
          setIsLoading(false);
@@ -58,7 +55,7 @@ const Lists = () => {
                h.table_loading(5)
             ) : (
                <Each
-                  of={content}
+                  of={state.content}
                   render={(row) => (
                      <tr>
                         <td>{h.parse("tahun_ajar", row)}</td>

@@ -11,15 +11,16 @@ class GenerateBeasiswa extends Common
    public function getStatusPendaftaranBeasiswa(array $post): array
    {
       $pendaftar = $this->queryPendaftar($post);
+      $id_generate_beasiswa = @$pendaftar['id_generate_beasiswa'] ?? null;
 
       return [
          'pendaftar' => $pendaftar,
-         'lampiranUpload' => $this->queryLampiranUpload($pendaftar['id_generate_beasiswa']),
+         'lampiranUpload' => $this->queryLampiranUpload($id_generate_beasiswa),
          'lampiranYangDiupload' => $this->getDataLampiranUpload($post['nim']),
       ];
    }
 
-   private function queryLampiranUpload(int $id_generate_beasiswa): array
+   private function queryLampiranUpload(int $id_generate_beasiswa = null): array
    {
       $table = $this->db->table('tb_lampiran_upload tlu');
       $table->select('tmlu.id, tmlu.nama');
@@ -43,7 +44,7 @@ class GenerateBeasiswa extends Common
    private function queryPendaftar(array $post)
    {
       $table = $this->db->table('tb_pendaftar tp');
-      $table->select('tp.id as id_pendaftar, tp.periode, tp.nim, tp.id_generate_beasiswa, tp.uploaded, tp.status_diterima, tp.is_aktif, tp.sudah_divalidasi, tp.nama, tp.perbaiki, tp.catatan_perbaikan, tp.tanggal_validasi, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as nama_jenis_beasiswa, tmjb.keterangan as keterangan_jenis_beasiswa');
+      $table->select('tp.id as id_pendaftar, tp.periode, tp.nim, tp.id_generate_beasiswa, tp.uploaded, tp.is_aktif, tp.nama, tp.catatan_perbaikan, tp.tanggal_validasi, tgb.tanggal_mulai, tgb.tanggal_akhir, tgb.wajib_ipk, tgb.minimal_ipk, tgb.maksimal_ipk, tgb.id_kategori_beasiswa, tmjb.nama as nama_jenis_beasiswa, tmjb.keterangan as keterangan_jenis_beasiswa');
       $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
       $table->where('tp.nim', $post['nim']);
