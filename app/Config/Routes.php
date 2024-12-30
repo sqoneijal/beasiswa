@@ -196,9 +196,18 @@ function mahasiswaLampiranUpload($routes): void
    });
 }
 
+function mahasiswaTagihan($routes): void
+{
+   $routes->group('tagihan', function ($routes) {
+      $routes->post('getdata', 'Tagihan::getData');
+      $routes->post('syncrontagihan', 'Tagihan::syncronTagihan');
+   });
+}
+
 $routes->group('mahasiswa', ['namespace' => 'App\Controllers\Mahasiswa'], function ($routes) {
    mahasiswaBiodata($routes);
    mahasiswaKHS($routes);
    mahasiswaTranskrip($routes);
    mahasiswaLampiranUpload($routes);
+   mahasiswaTagihan($routes);
 });

@@ -10,6 +10,7 @@ const Khs = React.lazy(() => import("./Khs"));
 const Transkrip = React.lazy(() => import("./Transkrip"));
 const LampiranUpload = React.lazy(() => import("./LampiranUpload"));
 const Beasiswa = React.lazy(() => import("./Beasiswa"));
+const Tagihan = React.lazy(() => import("./Tagihan"));
 
 const Context = () => {
    const { module } = useSelector((e) => e.redux);
@@ -54,6 +55,9 @@ const Context = () => {
                   </Case>
                   <Case value="lampiran">
                      <LampiranUpload />
+                  </Case>
+                  <Case value="tagihan">
+                     <Tagihan />
                   </Case>
                </Switch>
             </div>

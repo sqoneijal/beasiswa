@@ -3,10 +3,50 @@
 namespace App\Models;
 
 use CodeIgniter\Database\RawSql;
-use App\Libraries\Sevima;
 
 class GenerateBeasiswa extends Common
 {
+
+   public function getIPKMahasiswa(string $nim): float
+   {
+      $table = $this->db->table('tb_transkrip');
+      $table->where('nim', $nim);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $get->freeResult();
+
+      if (empty($result)) {
+         return 0.0; // Handle empty results
+      }
+
+      $total_sks = 0;
+      $total_bobot = 0;
+      foreach ($result as $row) {
+         $total_bobot += $row['bobot_mata_kuliah'];
+         $total_sks += $row['sks_mata_kuliah'];
+      }
+
+      if ($total_sks == 0) {
+         return 0.0; // Avoid division by zero
+      }
+
+      return round($total_bobot / $total_sks, 2);
+   }
+
+   public function getStatusPembayaranSPP(string $nim): bool
+   {
+      $table = $this->db->table('tb_tagihan tg');
+      $table->join('tb_mst_periode tmp', 'tmp.id = tg.id_periode and tmp.is_aktif = \'1\'');
+      $table->where('tg.nim', $nim);
+      $table->groupStart();
+      $table->where('tg.jenis_akun', 'SPP');
+      $table->orWhere('tg.jenis_akun', 'Uang Kuliah Tunggal');
+      $table->groupEnd();
+      $table->where('tg.is_lunas', '1');
+
+      return $table->countAllResults() > 0;
+   }
 
    public function getStatusPendaftaranBeasiswa(array $post): array
    {
@@ -87,21 +127,14 @@ class GenerateBeasiswa extends Common
 
    public function initPendaftaranMahasiswa(array $post): array
    {
-      $sevima = new Sevima();
-      $periode = $sevima->getPeriode();
+      $periode = $this->getPeriodeAktif()['id'];
 
-      $periodeAktif = array_map(function ($row) {
-         return $row['nama_singkat'];
-      }, array_filter($periode, function ($row) {
-         return $row['is_aktif'] === '1';
-      }));
-
-      $statusPendaftaran = $this->getStatusPendaftaran(array_merge($post, ['periode' => current($periodeAktif)]));
+      $statusPendaftaran = $this->getStatusPendaftaran(array_merge($post, ['periode' => $periode]));
 
       return [
          'generateBeasiswa' => $this->getDetailGenerateBeasiswa($post['id_generate_beasiswa']),
          'statusPendaftaran' => $statusPendaftaran,
-         'apakahSudahMendaftarSebelumnya' => $this->checkApakahSudahMendaftarSebelumnya(array_merge($post, ['periode' => current($periodeAktif)])),
+         'apakahSudahMendaftarSebelumnya' => $this->checkApakahSudahMendaftarSebelumnya(array_merge($post, ['periode' => $periode])),
          'lampiranTelahDiUpload' => $this->getDataLampiranUpload($post['nim'])
       ];
    }
@@ -201,22 +234,19 @@ class GenerateBeasiswa extends Common
 
    public function getStatusPendaftaran(array $post): array
    {
+      $table = $this->db->table('tb_pendaftar');
+      $table->where('nim', $post['nim']);
+      $table->where('periode', $post['periode']);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
       $response = [];
-      if (@$post['id_generate_beasiswa']) {
-         $table = $this->db->table('tb_pendaftar');
-         $table->where('nim', $post['nim']);
-         $table->where('periode', $post['periode']);
-         $table->where('id_generate_beasiswa', @$post['id_generate_beasiswa']);
-
-         $get = $table->get();
-         $data = $get->getRowArray();
-         $fieldNames = $get->getFieldNames();
-         $get->freeResult();
-
-         if (isset($data)) {
-            foreach ($fieldNames as $field) {
-               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
-            }
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
          }
       }
 

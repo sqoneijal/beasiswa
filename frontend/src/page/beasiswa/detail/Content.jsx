@@ -70,6 +70,30 @@ const Content = () => {
       return typeof file[id_lampiran] === "undefined" ? "" : file[id_lampiran];
    };
 
+   const renderDaftarButton = (detailBeasiswa, detailMahasiswa) => {
+      if (detailBeasiswa.wajib_ipk === "t" && detailMahasiswa.ipk >= detailBeasiswa.minimal_ipk) {
+         return (
+            <div className="course_details-meta">
+               <div className="course_details-meta-right">
+                  <Link to={`/beasiswa/daftar/${h.parse("id_generate_beasiswa", detailBeasiswa)}`} className="theme-btn theme-btn-medium">
+                     Daftar
+                  </Link>
+               </div>
+            </div>
+         );
+      }
+
+      return (
+         <div className="course_details-meta">
+            <div className="course_details-meta-right">
+               <Link to={`/beasiswa/daftar/${h.parse("id_generate_beasiswa", detailBeasiswa)}`} className="theme-btn theme-btn-medium">
+                  Daftar
+               </Link>
+            </div>
+         </div>
+      );
+   };
+
    return isLoading ? (
       loader
    ) : (
@@ -79,16 +103,9 @@ const Content = () => {
                <h3 className="course_details-title">Beasiswa : {h.parse("nama", detailBeasiswa)}</h3>
                {checkIjinDaftarBeasiswa(init) &&
                   detailBeasiswa.angkatan.includes(angkatanMahasiswa) &&
-                  h.parse("status_mahasiswa", detailMahasiswa) === "Aktif" &&
-                  !h.objLength(statusPendaftaranBeasiswa) && (
-                     <div className="course_details-meta">
-                        <div className="course_details-meta-right">
-                           <Link to={`/beasiswa/daftar/${h.parse("id_generate_beasiswa", detailBeasiswa)}`} className="theme-btn theme-btn-medium">
-                              Daftar
-                           </Link>
-                        </div>
-                     </div>
-                  )}
+                  detailMahasiswa.statusPembayaranSPP &&
+                  !h.objLength(statusPendaftaranBeasiswa) &&
+                  renderDaftarButton(detailBeasiswa, detailMahasiswa)}
             </div>
             <div className="blog_details-content">
                <div className="blog_details-inner-text mr-80">{h.parse("keterangan", detailBeasiswa)}</div>

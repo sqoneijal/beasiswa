@@ -75,7 +75,7 @@ const Beasiswa = () => {
    ) : (
       <React.Suspense fallback={loader}>
          <Card className="shadow-sm">
-            {h.arrLength(module.pendaftar) ? (
+            {h.objLength(module.pendaftar) ? (
                <InformasiPendaftaranBeasiswa />
             ) : (
                <Card.Body>

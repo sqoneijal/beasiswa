@@ -20,6 +20,19 @@ class Sevima
       ]);
    }
 
+   public function getTagihanMahasiswa(string $nim): array
+   {
+      $req = $this->curl->request('GET', 'mahasiswa/' . $nim . '/invoice');
+      $body = json_decode($req->getBody(), true);
+
+      $data = [];
+      foreach ($body['data'] as $row) {
+         $data[] = $row['attributes'];
+      }
+
+      return $data;
+   }
+
    public function getPeriodeAktif(): array
    {
       sleep(3);

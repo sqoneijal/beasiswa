@@ -17,6 +17,7 @@ const LeftNav = () => {
       { label: "KHS", path: "khs" },
       { label: "Transkrip", path: "transkrip" },
       { label: "Lampiran Upload", path: "lampiran" },
+      { label: "Tagihan", path: "tagihan" },
       { label: "Beasiswa", path: "beasiswa" },
    ];
 

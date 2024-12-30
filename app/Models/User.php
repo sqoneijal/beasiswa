@@ -11,6 +11,38 @@ class User extends Common
       if (!$checkExistsBiodataMahasiswa) {
          $sevima = new \App\Libraries\Sevima();
          $this->insertBiodataMahasiswa($sevima->getBiodataMahasiswa($post['nim']));
+         $this->insertTagihan($sevima->getTagihanMahasiswa($post['nim']));
+         $this->insertTranskrip($sevima->getTranskripMahasiswa($post['nim']));
+      }
+   }
+
+   private function insertTranskrip(array $post): void
+   {
+      $fields = ['nim', 'id_program_studi', 'jenjang_program_studi', 'program_studi', 'id_kurikulum', 'kode_mata_kuliah', 'nama_mata_kuliah', 'nama_mata_kuliah_en', 'semester_mata_kuliah_ditempuh', 'sks_mata_kuliah', 'bobot_mata_kuliah', 'nilai_huruf', 'nilai_angka', 'is_transfer', 'semester_mahasiswa', 'id_kelompok_mata_kuliah', 'kelompok_mata_kuliah', 'id_periode', 'periode', 'is_mkdu', 'is_mengulang', 'is_lulus', 'is_mata_kuliah_wajib', 'is_deleted'];
+
+      $data = [];
+      foreach ($post as $value) {
+         $data[] = array_intersect_key($value, array_flip($fields));
+      }
+
+      if (!empty($data)) {
+         $table = $this->db->table('tb_transkrip');
+         $table->ignore(true)->insertBatch($data);
+      }
+   }
+
+   private function insertTagihan(array $post): void
+   {
+      $fields = ['id_tagihan', 'id_transaksi', 'kode_transaksi', 'id_periode', 'uraian', 'tanggal_transaksi', 'tanggal_akhir', 'nim', 'nama_mahasiswa', 'id_pendaftar', 'nama_pendaftar', 'id_periode_daftar', 'id_jenis_akun', 'jenis_akun', 'id_mata_uang', 'nominal_tagihan', 'nominal_denda', 'nominal_potongan', 'total_potongan', 'nominal_terbayar', 'nominal_sisa_tagihan', 'is_lunas', 'is_batal', 'is_rekon', 'waktu_rekon'];
+
+      $data = [];
+      foreach ($post as $value) {
+         $data[] = array_intersect_key($value, array_flip($fields));
+      }
+
+      if (!empty($data)) {
+         $table = $this->db->table('tb_tagihan');
+         $table->ignore(true)->insertBatch($data);
       }
    }
 
@@ -113,7 +145,7 @@ class User extends Common
       }
 
       $table = $this->db->table('tb_mahasiswa');
-      $table->insert($data);
+      $table->ignore(true)->insert($data);
    }
 
    private function checkExistsBiodataMahasiswa(string $nim): bool
