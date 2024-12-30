@@ -41,6 +41,7 @@
       "tinymce": "^7.5.1",
       "toastr": "^2.1.4",
       "uid": "^2.0.2",
+      "wnumb": "^1.2.0",
       "write-excel-file": "^2.0.10"
    }
 }

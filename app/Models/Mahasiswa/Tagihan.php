@@ -29,6 +29,7 @@ class Tagihan extends Common
    {
       $table = $this->db->table('tb_tagihan');
       $table->where('nim', $post['nim']);
+      $table->orderBy('id_periode');
 
       $get = $table->get();
       $result = $get->getResultArray();

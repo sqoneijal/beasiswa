@@ -102,7 +102,7 @@ const Context = ({ setPageTypeButton }) => {
          user_modified: init.preferred_username,
       };
 
-      setIsSubmit(true);
+      setState((prevState) => ({ ...prevState, isSubmit: true }));
       const fetch = h.post(`/beasiswa/perbaikiberkas/submitterima`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
@@ -120,7 +120,7 @@ const Context = ({ setPageTypeButton }) => {
          dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
       });
       fetch.finally(() => {
-         setIsSubmit(false);
+         setState((prevState) => ({ ...prevState, isSubmit: false }));
       });
    };
 

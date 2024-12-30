@@ -244,14 +244,6 @@ const Lists = ({ setPageTypeButton }) => {
             "Alamat Email",
          ];
 
-         // daftarDownload.forEach((row) => {
-         //    row.informasi_beasiswa.lampiranUploadBeasiswa.forEach((item) => {
-         //       firstArray.push(null);
-         //       secondArray.push(null);
-         //       thirdArray.push(item.nama);
-         //    });
-         // });
-
          const createFirstHeader = (array, data = {}) => {
             return array.map((item) => {
                if (!item) return item;
@@ -593,7 +585,8 @@ const Lists = ({ setPageTypeButton }) => {
                return moment(h.parse("modified", data)).format("DD MMMM YYYY");
             },
          },
-         { targets: 4, data: null, visible: true },
+         { targets: 5, data: "ipk", orderable: false },
+         { targets: 6, data: null, visible: true },
       ],
       columnDefs: true,
       createdRow: (row, data) => {
@@ -663,6 +656,7 @@ const Lists = ({ setPageTypeButton }) => {
                   <th>nama</th>
                   <th>jenis beasiswa</th>
                   <th>tanggal</th>
+                  <th>ipk</th>
                   <th />
                </tr>
             </thead>

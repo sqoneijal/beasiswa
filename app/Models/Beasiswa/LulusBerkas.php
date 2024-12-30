@@ -2,7 +2,6 @@
 
 namespace App\Models\Beasiswa;
 
-use App\Libraries\Sevima;
 use App\Models\Common;
 use CodeIgniter\Database\RawSql;
 
@@ -45,11 +44,12 @@ class LulusBerkas extends Common
 
    public function getDetail(string $nim, int $periode): array
    {
-      $sevima = new Sevima();
-
       return [
-         'biodata' => $sevima->getBiodataMahasiswa($nim),
+         'biodata' => $this->getBiodataMahasiswa($nim),
          'informasiPendaftaran' => $this->getInformasiPendaftaranBeasiswa($nim, $periode),
+         'tagihan' => $this->getTagihanMahasiswa($nim),
+         'khs' => $this->getKHSMahasiswa($nim),
+         'transkrip' => $this->getTranskripMahasiswa($nim)
       ];
    }
 
@@ -184,9 +184,10 @@ class LulusBerkas extends Common
    private function queryData($post = [])
    {
       $table = $this->db->table('tb_pendaftar tp');
-      $table->select('tp.id, tp.nim, tp.nama, tmjb.nama as jenis_beasiswa, tp.modified, tp.periode, tp.catatan_perbaikan');
+      $table->select('tp.id, tp.nim, tp.nama, tmjb.nama as jenis_beasiswa, tp.modified, tp.periode, tp.catatan_perbaikan, round(tt.ipk, 2) as ipk');
       $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
       $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
+      $table->join('(select nim, sum(bobot_mata_kuliah::numeric) / sum(sks_mata_kuliah::numeric) as ipk from tb_transkrip where is_lulus = \'1\' group by nim) tt', 'cast(tt.nim as numeric) = tp.nim', 'left');
 
       $this->dt_where($table, [
          'tp.periode' => $post['periode'],

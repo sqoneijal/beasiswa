@@ -17,6 +17,73 @@ class Common extends Model
       $this->db = \Config\Database::connect('default');
    }
 
+   public function getTagihanMahasiswa(string $nim): array
+   {
+      $table = $this->db->table('tb_tagihan');
+      $table->where('nim', $nim);
+      $table->orderBy('id_periode');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
+   public function getKHSMahasiswa(string $nim): array
+   {
+      $table = $this->db->table('tb_khs');
+      $table->where('nim', $nim);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $get->freeResult();
+
+      $periode = [];
+      $content = [];
+      foreach ($result as $row) {
+         $periode[] = $row['id_periode'];
+
+         $content[$row['id_periode']][] = $row;
+      }
+
+      $uniqueArray = array_values(array_unique($periode));
+      sort($uniqueArray);
+
+      return [
+         'periode' => $uniqueArray,
+         'content' => $content
+      ];
+   }
+
+   public function getTranskripMahasiswa(string $nim): array
+   {
+      $table = $this->db->table('tb_transkrip');
+      $table->where('nim', $nim);
+      $table->where('is_lulus', '1');
+      $table->orderBy('semester_mata_kuliah_ditempuh');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
    public function getPeriodeAktif(): array
    {
       $table = $this->db->table('tb_mst_periode');

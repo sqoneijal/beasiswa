@@ -30,7 +30,8 @@ const Lists = ({ setPageTypeButton }) => {
                return moment(h.parse("modified", data)).format("DD MMMM YYYY");
             },
          },
-         { targets: 4, data: null, visible: true },
+         { targets: 5, data: "ipk", orderable: false },
+         { targets: 6, data: null, visible: true },
       ],
       columnDefs: true,
       createdRow: (row, data) => {
@@ -86,6 +87,7 @@ const Lists = ({ setPageTypeButton }) => {
                   <th>nama</th>
                   <th>jenis beasiswa</th>
                   <th>tanggal</th>
+                  <th>ipk</th>
                   <th />
                </tr>
             </thead>
