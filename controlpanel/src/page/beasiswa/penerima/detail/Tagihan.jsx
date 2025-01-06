@@ -28,7 +28,7 @@ const Tagihan = () => {
       const formData = { nim: detailContent.nim };
 
       setState((prev) => ({ ...prev, isLoadingSyncron: true }));
-      const fetch = h.post(`/beasiswa/tahapwawancara/syncrontagihan`, formData);
+      const fetch = h.post(`/beasiswa/penerima/syncrontagihan`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 

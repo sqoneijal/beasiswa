@@ -7,10 +7,11 @@ import { setFilter, setModule } from "~/redux";
 
 const Lists = React.lazy(() => import("./Lists"));
 const Detail = React.lazy(() => import("./detail/Context"));
+const ImportExcel = React.lazy(() => import("./importexcel/Context"));
 
 const Context = ({ setPageTypeButton }) => {
    const { module, filter } = useSelector((e) => e.redux);
-   const { openDetail } = module;
+   const { openDetail, openFormImport } = module;
    const dispatch = useDispatch();
 
    // bool
@@ -63,11 +64,19 @@ const Context = ({ setPageTypeButton }) => {
 
    const props = { setPageTypeButton };
 
+   const handleRenderContext = () => {
+      if (openFormImport) {
+         return <ImportExcel {...props} />;
+      }
+
+      return openDetail ? <Detail {...props} /> : <Lists {...props} />;
+   };
+
    return isLoading
       ? loader
       : h.objLength(filter) && (
            <React.Suspense fallback={loader}>
-              <Card className="shadow-sm">{openDetail ? <Detail {...props} /> : <Lists {...props} />}</Card>
+              <Card className="shadow-sm">{handleRenderContext()}</Card>
            </React.Suspense>
         );
 };

@@ -2,7 +2,7 @@
 
 namespace App\Validation\Beasiswa;
 
-class TahapWawancara
+class Penerima
 {
 
    public function submitImport(): array
@@ -20,7 +20,7 @@ class TahapWawancara
       return [
          'catatan_perbaikan' => [
             'rules' => 'required',
-            'label' => 'Catatan perbaikan'
+            'label' => 'Catatan'
          ]
       ];
    }

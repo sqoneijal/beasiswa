@@ -5,8 +5,118 @@ namespace App\Models\Beasiswa;
 use App\Models\Common;
 use CodeIgniter\Database\RawSql;
 
-class TahapWawancara extends Common
+class Penerima extends Common
 {
+
+   public function submitImport(array $post): array
+   {
+      try {
+         $sevima = new \App\Libraries\Sevima();
+         $content = json_decode($post['data'], true);
+
+         foreach ($content as $row) {
+            if ($row['checked']) {
+               $this->insertMahasiswa($sevima->getBiodataMahasiswa($row['nim']));
+               $this->insertPendaftar($row, $post);
+               sleep(3);
+            }
+         }
+
+         return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
+   private function insertPendaftar(array $data, array $post): void
+   {
+      $table = $this->db->table('tb_pendaftar');
+      $table->ignore(true)->insert([
+         'nim' => $data['nim'],
+         'id_generate_beasiswa' => $post['jenis_beasiswa'],
+         'periode' => $post['periode'],
+         'id_status_pendaftaran' => 4,
+         'uploaded' => new RawSql('now()'),
+         'user_modified' => $post['user_modified']
+      ]);
+   }
+
+   private function insertMahasiswa(array $post): void
+   {
+      $fields = ['nim', 'nisn', 'nupn', 'npsn', 'nirm', 'nirl', 'id_periode', 'id_periode_terakhir', 'id_negara', 'nama_negara', 'id_agama', 'agama', 'id_sistem_kuliah', 'sistem_kuliah', 'id_kurikulum', 'id_kurikulum_asal', 'id_jalur_pendaftaran', 'jalur_pendaftaran', 'id_program_studi', 'id_satuan_kerja', 'program_studi', 'id_jenjang', 'id_status_mahasiswa', 'status_mahasiswa', 'id_gelombang', 'gelombang', 'id_pekerjaan', 'pekerjaan', 'nama', 'gelar_depan', 'gelar_belakang', 'alamat', 'rt', 'rw', 'dusun', 'desa', 'kode_pos', 'id_kecamatan', 'kecamatan', 'id_kota', 'kota', 'id_provinsi', 'provinsi', 'alamat_domisili', 'rt_domisili', 'rw_domisili', 'dusun_domisili', 'desa_domisili', 'kode_pos_domisili', 'id_kecamatan_domisili', 'kecamatan_domisili', 'id_kota_domisili', 'kota_domisili', 'id_provinsi_domisili', 'provinsi_domisili', 'telepon', 'hp', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'status_nikah', 'email', 'nik', 'nomor_kk', 'nomor_kps', 'tanggal_daftar', 'nama_sekolah', 'no_ijazah_sma', 'id_kategori_ukt', 'kategori_ukt', 'is_transfer', 'nim_lama', 'id_universitas_asal', 'universitas_asal', 'id_program_studi_asal', 'program_studi_asal', 'ipk_asal', 'sks_asal', 'id_periode_transfer', 'tanggal_transfer', 'email_kampus', 'is_disabilitas', 'tanggal_sk_keluar', 'no_sk_keluar', 'alasan_keluar'];
+
+      $data = [];
+      foreach ($fields as $field) {
+         if (@$post[$field]) {
+            $data[$field] = $post[$field];
+         } else {
+            $data[$field] = null;
+         }
+      }
+
+      $table = $this->db->table('tb_mahasiswa');
+      $table->ignore(true)->insert($data);
+   }
+
+   public function validasiImportExcel(array $post): array
+   {
+      $daftarNIM = json_decode($post['nim'], true);
+
+      $table = $this->db->table('tb_pendaftar tp');
+      $table->select('tp.*, tmjb.nama as nama_beasiswa, tsp.keterangan as status_validasi');
+      $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
+      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
+      $table->join('tb_status_pendaftaran tsp', 'tsp.id = tp.id_status_pendaftaran', 'left');
+      $table->whereIn('tp.nim', $daftarNIM);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $row) {
+         $response[$row['nim']] = $row;
+      }
+      return $response;
+   }
+
+   public function getGenerateBeasiswa(): array
+   {
+      $table = $this->db->table('tb_generate_beasiswa tgb');
+      $table->select('tgb.id as id_generate_beasiswa, tmjb.id as id_jenis_beasiswa, tmjb.nama as jenis_beasiswa, tgb.periode');
+      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
+   public function submitPerbaiki(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_pendaftar');
+         $table->where('id', $post['id_pendaftar']);
+         $table->update([
+            'catatan_perbaikan' => $post['catatan_perbaikan'],
+            'tanggal_validasi' => new RawSql('now()'),
+            'user_modified' => $post['user_modified'],
+            'id_status_pendaftaran' => 5,
+            'is_aktif' => false
+         ]);
+         return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
 
    public function syncronTagihan(array $post): array
    {
@@ -98,153 +208,6 @@ class TahapWawancara extends Common
       }
 
       return $this->getTranskripMahasiswa($post['nim']);
-   }
-
-   public function submitImport(array $post): array
-   {
-      try {
-         $sevima = new \App\Libraries\Sevima();
-         $content = json_decode($post['data'], true);
-
-         foreach ($content as $row) {
-            if ($row['checked']) {
-               $this->insertMahasiswa($sevima->getBiodataMahasiswa($row['nim']));
-               $this->insertPendaftar($row, $post);
-               sleep(3);
-            }
-         }
-
-         return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
-      } catch (\Exception $e) {
-         return ['status' => false, 'msg_response' => $e->getMessage()];
-      }
-   }
-
-   private function insertPendaftar(array $data, array $post): void
-   {
-      $table = $this->db->table('tb_pendaftar');
-      $table->ignore(true)->insert([
-         'nim' => $data['nim'],
-         'id_generate_beasiswa' => $post['jenis_beasiswa'],
-         'periode' => $post['periode'],
-         'id_status_pendaftaran' => 3,
-         'uploaded' => new RawSql('now()'),
-         'user_modified' => $post['user_modified']
-      ]);
-   }
-
-   private function insertMahasiswa(array $post): void
-   {
-      $fields = ['nim', 'nisn', 'nupn', 'npsn', 'nirm', 'nirl', 'id_periode', 'id_periode_terakhir', 'id_negara', 'nama_negara', 'id_agama', 'agama', 'id_sistem_kuliah', 'sistem_kuliah', 'id_kurikulum', 'id_kurikulum_asal', 'id_jalur_pendaftaran', 'jalur_pendaftaran', 'id_program_studi', 'id_satuan_kerja', 'program_studi', 'id_jenjang', 'id_status_mahasiswa', 'status_mahasiswa', 'id_gelombang', 'gelombang', 'id_pekerjaan', 'pekerjaan', 'nama', 'gelar_depan', 'gelar_belakang', 'alamat', 'rt', 'rw', 'dusun', 'desa', 'kode_pos', 'id_kecamatan', 'kecamatan', 'id_kota', 'kota', 'id_provinsi', 'provinsi', 'alamat_domisili', 'rt_domisili', 'rw_domisili', 'dusun_domisili', 'desa_domisili', 'kode_pos_domisili', 'id_kecamatan_domisili', 'kecamatan_domisili', 'id_kota_domisili', 'kota_domisili', 'id_provinsi_domisili', 'provinsi_domisili', 'telepon', 'hp', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'status_nikah', 'email', 'nik', 'nomor_kk', 'nomor_kps', 'tanggal_daftar', 'nama_sekolah', 'no_ijazah_sma', 'id_kategori_ukt', 'kategori_ukt', 'is_transfer', 'nim_lama', 'id_universitas_asal', 'universitas_asal', 'id_program_studi_asal', 'program_studi_asal', 'ipk_asal', 'sks_asal', 'id_periode_transfer', 'tanggal_transfer', 'email_kampus', 'is_disabilitas', 'tanggal_sk_keluar', 'no_sk_keluar', 'alasan_keluar'];
-
-      $data = [];
-      foreach ($fields as $field) {
-         if (@$post[$field]) {
-            $data[$field] = $post[$field];
-         } else {
-            $data[$field] = null;
-         }
-      }
-
-      $table = $this->db->table('tb_mahasiswa');
-      $table->ignore(true)->insert($data);
-   }
-
-   public function getGenerateBeasiswa(): array
-   {
-      $table = $this->db->table('tb_generate_beasiswa tgb');
-      $table->select('tgb.id as id_generate_beasiswa, tmjb.nama');
-      $table->join('tb_mst_periode tmp', 'tmp.id = tgb.periode and tmp.is_aktif = \'1\'');
-      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
-
-      $get = $table->get();
-      $result = $get->getResultArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
-      $response = [];
-      foreach ($result as $key => $val) {
-         foreach ($fieldNames as $field) {
-            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
-         }
-      }
-      return $response;
-   }
-
-   public function validasiImportExcel(array $post): array
-   {
-      $daftarNIM = json_decode($post['nim'], true);
-
-      $table = $this->db->table('tb_pendaftar tp');
-      $table->select('tp.*, tmjb.nama as nama_beasiswa, tsp.keterangan as status_validasi');
-      $table->join('tb_generate_beasiswa tgb', 'tgb.id = tp.id_generate_beasiswa');
-      $table->join('tb_mst_jenis_beasiswa tmjb', 'tmjb.id = tgb.id_kategori_beasiswa');
-      $table->join('tb_status_pendaftaran tsp', 'tsp.id = tp.id_status_pendaftaran', 'left');
-      $table->whereIn('tp.nim', $daftarNIM);
-
-      $get = $table->get();
-      $result = $get->getResultArray();
-      $get->freeResult();
-
-      $response = [];
-      foreach ($result as $row) {
-         $response[$row['nim']] = $row;
-      }
-      return $response;
-   }
-
-   public function downloadExcel(): array
-   {
-      $table = $this->db->table('tb_pendaftar');
-      $table->where('id_status_pendaftaran', 3);
-      $table->limit(1);
-
-      $get = $table->get();
-      $result = $get->getResultArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
-      $response = [];
-      foreach ($result as $key => $val) {
-         foreach ($fieldNames as $field) {
-            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
-         }
-      }
-      return $response;
-   }
-
-   public function submitTerima(array $post): array
-   {
-      try {
-         $table = $this->db->table('tb_pendaftar');
-         $table->where('id', $post['id_pendaftar']);
-         $table->update([
-            'tanggal_validasi' => new RawSql('now()'),
-            'user_modified' => $post['user_modified'],
-            'modified' => new RawSql('now()'),
-            'id_status_pendaftaran' => 4
-         ]);
-         return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
-      } catch (\Exception $e) {
-         return ['status' => false, 'msg_response' => $e->getMessage()];
-      }
-   }
-
-   public function submitPerbaiki(array $post): array
-   {
-      try {
-         $table = $this->db->table('tb_pendaftar');
-         $table->where('id', $post['id_pendaftar']);
-         $table->update([
-            'catatan_perbaikan' => $post['catatan_perbaikan'],
-            'tanggal_validasi' => new RawSql('now()'),
-            'user_modified' => $post['user_modified'],
-            'id_status_pendaftaran' => 2
-         ]);
-         return ['status' => true, 'msg_response' => 'Data berhasil disimpan.'];
-      } catch (\Exception $e) {
-         return ['status' => false, 'msg_response' => $e->getMessage()];
-      }
    }
 
    public function getDetail(string $nim, int $periode): array
@@ -374,7 +337,7 @@ class TahapWawancara extends Common
 
       $this->dt_where($table, [
          'tp.periode' => $post['periode'],
-         'tp.id_status_pendaftaran' => 3
+         'tp.id_status_pendaftaran' => 4
       ]);
 
       return $table->countAllResults();
@@ -397,7 +360,7 @@ class TahapWawancara extends Common
 
       $this->dt_where($table, [
          'tp.periode' => $post['periode'],
-         'tp.id_status_pendaftaran' => 3
+         'tp.id_status_pendaftaran' => 4
       ]);
 
       $this->datatableColumnSearch($table, ['tm.nim', 'tm.nama']);

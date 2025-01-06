@@ -58,6 +58,29 @@ function beasiswaTahapWawancara($routes): void
       $routes->post('submitperbaiki', 'TahapWawancara::submitPerbaiki');
       $routes->post('submitperbaiki', 'TahapWawancara::submitPerbaiki');
       $routes->post('grepdatafromsevima', 'TahapWawancara::grepDataFromSevima');
+      $routes->post('validasiimportexcel', 'TahapWawancara::validasiImportExcel');
+      $routes->post('submitimport', 'TahapWawancara::submitImport');
+      $routes->post('syncrontranskrip', 'TahapWawancara::syncronTranskrip');
+      $routes->post('syncronkhs', 'TahapWawancara::syncronKHS');
+      $routes->post('syncrontagihan', 'TahapWawancara::syncronTagihan');
+      $routes->post('submitterima', 'TahapWawancara::submitTerima');
+   });
+}
+
+function beasiswaPenerima($routes): void
+{
+   $routes->group('penerima', function ($routes) {
+      $routes->get('initpage', 'Penerima::initPage');
+
+      $routes->post('getdata', 'Penerima::getData');
+      $routes->post('getdetail', 'Penerima::getDetail');
+      $routes->post('syncrontranskrip', 'Penerima::syncronTranskrip');
+      $routes->post('syncronkhs', 'Penerima::syncronKHS');
+      $routes->post('syncrontagihan', 'Penerima::syncronTagihan');
+      $routes->post('submitperbaiki', 'Penerima::submitPerbaiki');
+      $routes->post('downloadexcel', 'Penerima::downloadExcel');
+      $routes->post('validasiimportexcel', 'Penerima::validasiImportExcel');
+      $routes->post('submitimport', 'Penerima::submitImport');
    });
 }
 
@@ -68,6 +91,7 @@ function beasiswa($routes): void
       beasiswaPerbaikiBerkas($routes);
       beasiswaLulusBerkas($routes);
       beasiswaTahapWawancara($routes);
+      beasiswaPenerima($routes);
    });
 }
 beasiswa($routes);

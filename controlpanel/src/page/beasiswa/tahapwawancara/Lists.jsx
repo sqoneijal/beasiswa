@@ -578,13 +578,6 @@ const Lists = ({ setPageTypeButton }) => {
          { targets: 1, data: "nim" },
          { targets: 2, data: "nama" },
          { targets: 3, data: "jenis_beasiswa" },
-         {
-            targets: 4,
-            data: null,
-            render: (data) => {
-               return moment(h.parse("modified", data)).format("DD MMMM YYYY");
-            },
-         },
          { targets: 5, data: "ipk", orderable: false },
          { targets: 6, data: null, visible: true },
       ],
@@ -624,20 +617,38 @@ const Lists = ({ setPageTypeButton }) => {
             dispatch(setFilter({ ...filter, periode: value }));
          };
 
-         const button = document.createElement("button");
-         button.type = "submit";
-         button.id = "terima";
-         button.name = "terima";
-         button.className = "fw-bold border-0 waves-effect waves-light btn btn-primary";
-         button.innerHTML = `<span class="indicator-label">Download Excel</span>`;
+         const divGroup = document.createElement("div");
+         divGroup.className = "btn-group";
 
-         button.onclick = (e) => {
+         const btnDownloadExcel = document.createElement("button");
+         btnDownloadExcel.type = "submit";
+         btnDownloadExcel.id = "terima";
+         btnDownloadExcel.name = "terima";
+         btnDownloadExcel.className = "fw-bold border-0 waves-effect waves-light btn btn-primary";
+         btnDownloadExcel.innerHTML = `<span class="indicator-label">Download Excel</span>`;
+
+         btnDownloadExcel.onclick = (e) => {
             e.preventDefault();
             handleDownloadExcel(e.target);
          };
 
+         const btnImportExcel = document.createElement("button");
+         btnImportExcel.type = "submit";
+         btnImportExcel.id = "import_excel";
+         btnImportExcel.name = "import_excel";
+         btnImportExcel.className = "fw-bold border-0 waves-effect waves-light btn btn-success";
+         btnImportExcel.innerHTML = `<span class="indicator-label">Import Excel</span>`;
+
+         btnImportExcel.onclick = (e) => {
+            e.preventDefault();
+            dispatch(setModule({ ...module, openFormImport: true }));
+         };
+
+         divGroup.appendChild(btnDownloadExcel);
+         divGroup.appendChild(btnImportExcel);
+
          container.appendChild(select);
-         dt_action.appendChild(button);
+         dt_action.appendChild(divGroup);
       },
    });
 
@@ -655,7 +666,6 @@ const Lists = ({ setPageTypeButton }) => {
                   <th>nim</th>
                   <th>nama</th>
                   <th>jenis beasiswa</th>
-                  <th>tanggal</th>
                   <th>ipk</th>
                   <th />
                </tr>

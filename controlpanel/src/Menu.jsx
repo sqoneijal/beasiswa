@@ -89,6 +89,10 @@ const Menu = ({ setPageTypeButton }) => {
                label: "Penerima",
                pathname: "/beasiswa/penerima",
             },
+            {
+               label: "Dibatalkan",
+               pathname: "/beasiswa/dibatalkan",
+            },
          ],
       },
       { label: "Periode", pathname: "/periode", icon: "menu-icon tf-icons ti ti-smart-home", sub: false },
@@ -104,7 +108,7 @@ const Menu = ({ setPageTypeButton }) => {
 
       setPageTypeButton("");
       accordionEventKey = parentEventKey;
-      dispatch(setModule({ ...module, openDetail: false, detailContent: {}, pageType: "" }));
+      dispatch(setModule({ ...module, openDetail: false, detailContent: {}, openFormImport: false, pageType: "" }));
    };
 
    return (

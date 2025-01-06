@@ -39,7 +39,7 @@ const Khs = () => {
       const formData = { nim: detailContent.nim };
 
       setState((prev) => ({ ...prev, isLoadingSyncron: true }));
-      const fetch = h.post(`/beasiswa/tahapwawancara/syncronkhs`, formData);
+      const fetch = h.post(`/beasiswa/penerima/syncronkhs`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 

@@ -17,6 +17,25 @@ class Common extends Model
       $this->db = \Config\Database::connect('default');
    }
 
+   public function getDaftarJenisBeasiswa(): array
+   {
+      $table = $this->db->table('tb_mst_jenis_beasiswa');
+      $table->orderBy('nama');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
    public function getTagihanMahasiswa(string $nim): array
    {
       $table = $this->db->table('tb_tagihan');
