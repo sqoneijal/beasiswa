@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect } from "react";
 import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
@@ -12,14 +12,6 @@ const Lists = ({ setPageTypeButton }) => {
    const { filter, module } = useSelector((e) => e.redux);
    const { daftarPeriode } = module;
    const dispatch = useDispatch();
-
-   const [state, setState] = useState({
-      grepStatusDownload: false,
-   });
-
-   useLayoutEffect(() => {
-      return () => {};
-   }, [state]);
 
    const base_url_datatable = "beasiswa/penerima/getdata";
    const datatable_url = `/${base_url_datatable}?${h.serialize(filter)}`;

@@ -8,6 +8,57 @@ use CodeIgniter\Database\RawSql;
 class Penerima extends Common
 {
 
+   public function download(array $post): array
+   {
+      $table = $this->db->table('tb_pendaftar tp');
+      $table->select('tm.nama as nama_mahasiswa, tm.nim, tm.tempat_lahir, tm.tanggal_lahir, tm.nik, concat(tm.alamat, \' \', \'RT \', coalesce(tm.rt, \'0\'), \'/RW \', coalesce(tm.rw, \'0\'), \' Kelurahan \', tm.desa, \', Kec. \', tm.kecamatan, \', Kota \', tm.kota, \', \', tm.kode_pos) as alamat, tm.hp, tg.kode_transaksi as invoice, to_char(tg.tanggal_transaksi::date, \'YYYY-MM-DD\') as tanggal_bayar, tg.nominal_tagihan as jumlah_bayar, tm.email, tm.program_studi as prodi, round(tt.ipk, 2) as ipk, tm.nisn');
+      $table->join('tb_mahasiswa tm', 'cast(tm.nim as numeric) = tp.nim');
+      $table->join('tb_tagihan tg', 'cast(tg.nim as numeric) = tp.nim and cast(tg.id_periode as numeric) = tp.periode and tg.jenis_akun in (\'SPP\', \'Uang Kuliah Tunggal\')');
+      $table->join('(select nim, sum(bobot_mata_kuliah::numeric) / sum(sks_mata_kuliah::numeric) as ipk from tb_transkrip where is_lulus = \'1\' group by nim) tt', 'cast(tt.nim as numeric) = tp.nim');
+      $table->where('tp.id_status_pendaftaran', 4);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $mahasiswa = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $mahasiswa[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+
+         $mahasiswa[$key]['lampiran_upload'] = $this->getLampiranYangDiUpload($val['nim']);
+      }
+
+      return [
+         'mahasiswa' => $mahasiswa,
+         'daftar_lampiran' => $this->getDaftarLampiranExcel($post['jenis_beasiswa'])
+      ];
+   }
+
+   public function getDaftarLampiranExcel(int $id_jenis_beasiswa): array
+   {
+      $table = $this->db->table('tb_generate_beasiswa tgb');
+      $table->select('tmlu.id, tmlu.nama');
+      $table->join('tb_lampiran_upload tlu', 'tlu.id_generate_beasiswa = tgb.id');
+      $table->join('tb_mst_lampiran_upload tmlu', 'tmlu.id = tlu.id_lampiran_upload');
+      $table->where('tgb.id_kategori_beasiswa', $id_jenis_beasiswa);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
    public function submitImport(array $post): array
    {
       try {

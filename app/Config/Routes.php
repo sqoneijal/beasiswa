@@ -81,6 +81,7 @@ function beasiswaPenerima($routes): void
       $routes->post('downloadexcel', 'Penerima::downloadExcel');
       $routes->post('validasiimportexcel', 'Penerima::validasiImportExcel');
       $routes->post('submitimport', 'Penerima::submitImport');
+      $routes->post('download', 'Penerima::download');
    });
 }
 

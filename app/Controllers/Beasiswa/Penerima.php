@@ -9,6 +9,13 @@ use App\Validation\Beasiswa\Penerima as Validate;
 class Penerima extends BaseController
 {
 
+   public function download(): object
+   {
+      $model = new Model();
+      $content = $model->download($this->post);
+      return $this->respond($content);
+   }
+
    public function submitImport(): object
    {
       $response = ['status' => false, 'errors' => []];
