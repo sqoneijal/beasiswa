@@ -96,7 +96,7 @@ const Menu = ({ setPageTypeButton }) => {
          ],
       },
       { label: "Periode", pathname: "/periode", icon: "menu-icon tf-icons ti ti-smart-home", sub: false },
-      { label: "Pengguna", pathname: "/pengguna", icon: "menu-icon tf-icons ti ti-smart-home", sub: false },
+      // { label: "Pengguna", pathname: "/pengguna", icon: "menu-icon tf-icons ti ti-smart-home", sub: false },
    ];
 
    const resetRedux = (pathname, parentEventKey) => {

@@ -85,6 +85,19 @@ function beasiswaPenerima($routes): void
    });
 }
 
+function beasiswaDibatalkan($routes): void
+{
+   $routes->group('dibatalkan', function ($routes) {
+      $routes->get('initpage', 'Dibatalkan::initPage');
+
+      $routes->post('getdata', 'Dibatalkan::getData');
+      $routes->post('getdetail', 'Dibatalkan::getDetail');
+      $routes->post('syncrontranskrip', 'Dibatalkan::syncronTranskrip');
+      $routes->post('syncronkhs', 'Dibatalkan::syncronKHS');
+      $routes->post('syncrontagihan', 'Dibatalkan::syncronTagihan');
+   });
+}
+
 function beasiswa($routes): void
 {
    $routes->group('beasiswa', ['namespace' => 'App\Controllers\Beasiswa'], function ($routes) {
@@ -93,6 +106,7 @@ function beasiswa($routes): void
       beasiswaLulusBerkas($routes);
       beasiswaTahapWawancara($routes);
       beasiswaPenerima($routes);
+      beasiswaDibatalkan($routes);
    });
 }
 beasiswa($routes);
