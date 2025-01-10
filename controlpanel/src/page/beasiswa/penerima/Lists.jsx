@@ -2,7 +2,7 @@ import React, { useLayoutEffect } from "react";
 import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
-import { setModule } from "~/redux";
+import { setFilter, setModule } from "~/redux";
 
 const ModalConfirmDownload = React.lazy(() => import("./ModalConfirmDownload"));
 

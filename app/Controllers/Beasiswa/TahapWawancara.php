@@ -9,6 +9,13 @@ use App\Validation\Beasiswa\TahapWawancara as Validate;
 class TahapWawancara extends BaseController
 {
 
+   public function download(): object
+   {
+      $model = new Model();
+      $content = $model->download($this->post);
+      return $this->respond($content);
+   }
+
    public function syncronTagihan(): object
    {
       $model = new Model();
@@ -51,14 +58,6 @@ class TahapWawancara extends BaseController
    {
       $model = new Model();
       $content = $model->validasiImportExcel($this->post);
-      return $this->respond($content);
-   }
-
-   public function grepDataFromSevima(): object
-   {
-      $model = new Model();
-
-      $content = array_merge($model->getBiodataMahasiswa($this->post['nim']), ['informasi_beasiswa' => $model->getInformasiPendaftaranBeasiswa($this->post['nim'], $this->post['periode'])]);
       return $this->respond($content);
    }
 

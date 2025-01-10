@@ -57,13 +57,13 @@ function beasiswaTahapWawancara($routes): void
       $routes->post('getdetail', 'TahapWawancara::getDetail');
       $routes->post('submitperbaiki', 'TahapWawancara::submitPerbaiki');
       $routes->post('submitperbaiki', 'TahapWawancara::submitPerbaiki');
-      $routes->post('grepdatafromsevima', 'TahapWawancara::grepDataFromSevima');
       $routes->post('validasiimportexcel', 'TahapWawancara::validasiImportExcel');
       $routes->post('submitimport', 'TahapWawancara::submitImport');
       $routes->post('syncrontranskrip', 'TahapWawancara::syncronTranskrip');
       $routes->post('syncronkhs', 'TahapWawancara::syncronKHS');
       $routes->post('syncrontagihan', 'TahapWawancara::syncronTagihan');
       $routes->post('submitterima', 'TahapWawancara::submitTerima');
+      $routes->post('download', 'TahapWawancara::download');
    });
 }
 
