@@ -50,7 +50,7 @@ const TopNavbar = ({ pageTypeButton }) => {
                         <div className="d-grid px-2 pt-2 pb-1">
                            <a
                               className="btn btn-sm btn-danger d-flex waves-effect waves-light"
-                              href={`https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/logout?redirect_uri=${window.location.origin}`}>
+                              href={`https://iam.ar-raniry.ac.id/realms/uinar/protocol/openid-connect/logout?redirect_uri=${window.location.origin}`}>
                               <small className="align-middle">Logout</small>
                               <i className="ti ti-logout ms-2 ti-14px" />
                            </a>

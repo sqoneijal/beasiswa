@@ -42,9 +42,9 @@ const Context = () => {
       if (id_generate_beasiswa && h.objLength(init)) initPage(id_generate_beasiswa, init.preferred_username);
       else
          window.open(
-            `https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/auth?client_id=${
-               sso.clientId
-            }&redirect_uri=${encodeURIComponent(location.href)}&response_mode=fragment&response_type=code&scope=openid`,
+            `https://iam.ar-raniry.ac.id/realms/uinar/protocol/openid-connect/auth?client_id=${sso.clientId}&redirect_uri=${encodeURIComponent(
+               location.href
+            )}&response_mode=fragment&response_type=code&scope=openid`,
             "_parent"
          );
       return () => {};

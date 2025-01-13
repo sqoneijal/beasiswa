@@ -23,6 +23,7 @@ import "./assets/css/10-custom.css";
 const Header = React.lazy(() => import("./Header"));
 const Routing = React.lazy(() => import("./Routing"));
 const Footer = React.lazy(() => import("./Footer"));
+const MobileMenu = React.lazy(() => import("./MobileMenu"));
 
 const App = () => {
    const dispatch = useDispatch();
@@ -68,7 +69,7 @@ const App = () => {
             return;
          }
 
-         const logoutUrl = `https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(
+         const logoutUrl = `https://iam.ar-raniry.ac.id/realms/uinar/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(
             location.href
          )}`;
          window.open(logoutUrl, "_self");
@@ -80,7 +81,7 @@ const App = () => {
 
    useLayoutEffect(() => {
       const keycloak = new Keycloak({
-         url: "https://keycloak.ar-raniry.ac.id/auth/",
+         url: "https://iam.ar-raniry.ac.id/",
          realm: sso.realm,
          clientId: sso.clientId,
       });
@@ -135,6 +136,7 @@ const App = () => {
       loader
    ) : (
       <React.Suspense fallback={loader}>
+         <MobileMenu />
          <Header />
          <main>
             <Routing />

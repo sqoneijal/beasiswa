@@ -29,9 +29,7 @@ const Header = () => {
    };
 
    const handleLogout = () => {
-      const logoutUrl = `https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(
-         location.href
-      )}`;
+      const logoutUrl = `https://iam.ar-raniry.ac.id/realms/uinar/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(location.href)}`;
       window.location.href = logoutUrl;
    };
 
@@ -89,14 +87,14 @@ const Header = () => {
                            ) : (
                               <a
                                  className="header-btn theme-btn theme-btn-medium"
-                                 href={`https://keycloak.ar-raniry.ac.id/auth/realms/uinar/protocol/openid-connect/auth?client_id=${
+                                 href={`https://iam.ar-raniry.ac.id/realms/uinar/protocol/openid-connect/auth?client_id=${
                                     sso.clientId
                                  }&redirect_uri=${encodeURIComponent(location.href)}&response_mode=fragment&response_type=code&scope=openid`}>
                                  Login
                               </a>
                            )}
                         </div>
-                        <div className="header-menu-bar d-xl-none ml-10">
+                        <div className="header-menu-bar d-xl-none ml-10" onClick={() => dispatch(setModule({ ...module, openMobileMenu: true }))}>
                            <span className="header-menu-bar-icon side-toggle">
                               <i className="fa-light fa-bars" />
                            </span>
