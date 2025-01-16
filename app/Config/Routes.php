@@ -2,6 +2,14 @@
 
 $routes = service('routes');
 
+function dashboard($routes): void
+{
+   $routes->group('dashboard', function ($routes) {
+      $routes->get('initpage', 'Dashboard::initPage');
+   });
+}
+dashboard($routes);
+
 function pengguna($routes): void
 {
    $routes->group('pengguna', function ($routes) {
