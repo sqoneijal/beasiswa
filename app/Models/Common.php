@@ -17,6 +17,75 @@ class Common extends Model
       $this->db = \Config\Database::connect('default');
    }
 
+   public function syncronTranskripMahasiswa(string $nim): void
+   {
+      $sevima = new \App\Libraries\Sevima();
+      $content = $sevima->getTranskripMahasiswa($nim);
+
+      $fields = ['nim', 'id_program_studi', 'jenjang_program_studi', 'program_studi', 'id_kurikulum', 'kode_mata_kuliah', 'nama_mata_kuliah', 'nama_mata_kuliah_en', 'semester_mata_kuliah_ditempuh', 'sks_mata_kuliah', 'bobot_mata_kuliah', 'nilai_huruf', 'nilai_angka', 'is_transfer', 'semester_mahasiswa', 'id_kelompok_mata_kuliah', 'kelompok_mata_kuliah', 'id_periode', 'periode', 'is_mkdu', 'is_mengulang', 'is_lulus', 'is_mata_kuliah_wajib', 'is_deleted'];
+
+      $data = [];
+      foreach ($content as $value) {
+         $data[] = array_intersect_key($value, array_flip($fields));
+      }
+
+      if (!empty($data)) {
+         $table = $this->db->table('tb_transkrip');
+         $table->ignore(true)->insertBatch($data);
+      }
+   }
+
+   public function syncronKHSMahasiswa(string $nim): void
+   {
+      $sevima = service('curlrequest', [
+         'baseURI' => env('SEVIMA_PATH_URL'),
+         'headers' => [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'X-App-Key' => env('SEVIMA_APP_KEY'),
+            'X-Secret-Key' => env('SEVIMA_APP_SECRET')
+         ]
+      ]);
+
+      $req = $sevima->request('GET', 'mahasiswa/' . $nim . '/khs');
+      $body = json_decode($req->getBody(), true);
+
+      $content = [];
+      foreach ($body['data'] as $row) {
+         $content[] = $row['attributes'];
+      }
+
+      $fields = ['id_periode', 'nim', 'id_kelas', 'kelompok', 'nama_kelas', 'id_kelas_perkuliahan', 'kelas_perkuliahan', 'id_kurikulum', 'id_program_studi', 'program_studi', 'kode_mata_kuliah', 'mata_kuliah', 'sks', 'nilai_angka', 'nilai_numerik', 'nilai_huruf', 'is_pakai', 'is_lulus', 'is_nilai_masuk', 'is_nilai_akhir', 'is_auto_nilai', 'is_ulang', 'is_tunda_nilai', 'is_deleted'];
+
+      $data = [];
+      foreach ($content as $value) {
+         $data[] = array_intersect_key($value, array_flip($fields));
+      }
+
+      if (!empty($data)) {
+         $table = $this->db->table('tb_khs');
+         $table->ignore(true)->insertBatch($data);
+      }
+   }
+
+   public function syncronTagihanMahasiswa(string $nim): void
+   {
+      $sevima = new \App\Libraries\Sevima();
+      $content = $sevima->getTagihanMahasiswa($nim);
+
+      $fields = ['id_tagihan', 'id_transaksi', 'kode_transaksi', 'id_periode', 'uraian', 'tanggal_transaksi', 'tanggal_akhir', 'nim', 'nama_mahasiswa', 'id_pendaftar', 'nama_pendaftar', 'id_periode_daftar', 'id_jenis_akun', 'jenis_akun', 'id_mata_uang', 'nominal_tagihan', 'nominal_denda', 'nominal_potongan', 'total_potongan', 'nominal_terbayar', 'nominal_sisa_tagihan', 'is_lunas', 'is_batal', 'is_rekon', 'waktu_rekon'];
+
+      $data = [];
+      foreach ($content as $value) {
+         $data[] = array_intersect_key($value, array_flip($fields));
+      }
+
+      if (!empty($data)) {
+         $table = $this->db->table('tb_tagihan');
+         $table->ignore(true)->insertBatch($data);
+      }
+   }
+
    public function getDaftarJenisBeasiswa(): array
    {
       $table = $this->db->table('tb_mst_jenis_beasiswa');

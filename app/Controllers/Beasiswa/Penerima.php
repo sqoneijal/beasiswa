@@ -40,12 +40,6 @@ class Penerima extends BaseController
       return $this->respond($content);
    }
 
-   public function downloadExcel(): object
-   {
-      $content = [];
-      return $this->respond($content);
-   }
-
    public function submitPerbaiki(): object
    {
       $response = ['status' => false, 'errors' => []];
@@ -100,6 +94,7 @@ class Penerima extends BaseController
          'periodeAktif' => $model->getPeriodeAktif(),
          'daftarPeriode' => $model->getDaftarPeriode(),
          'daftarGenerateBeasiswa' => $model->getGenerateBeasiswa(),
+         'daftarJenisBeasiswa' => $model->getDaftarJenisBeasiswaExportExcel(),
       ];
       return $this->respond($content);
    }

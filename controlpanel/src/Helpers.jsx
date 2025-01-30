@@ -623,7 +623,7 @@ const renderDTActionButtons = (content) => {
 };
 
 export const handleFilterDatatable = (url, content = {}) => {
-   dt.ajax.url(`${window.apiPath}${url}?${serialize(content)}`).load();
+   dt.ajax.url(`${window.apiPath}/${url}?${serialize(content)}`).load();
 };
 
 export const initDatatable = ({ ...content }) => {

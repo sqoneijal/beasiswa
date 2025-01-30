@@ -86,7 +86,6 @@ function beasiswaPenerima($routes): void
       $routes->post('syncronkhs', 'Penerima::syncronKHS');
       $routes->post('syncrontagihan', 'Penerima::syncronTagihan');
       $routes->post('submitperbaiki', 'Penerima::submitPerbaiki');
-      $routes->post('downloadexcel', 'Penerima::downloadExcel');
       $routes->post('validasiimportexcel', 'Penerima::validasiImportExcel');
       $routes->post('submitimport', 'Penerima::submitImport');
       $routes->post('download', 'Penerima::download');

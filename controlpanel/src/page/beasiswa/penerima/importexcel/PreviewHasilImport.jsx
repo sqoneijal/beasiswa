@@ -53,10 +53,12 @@ const PreviewHasilImport = ({ frontState, setFrontState }) => {
             if (typeof data[row.nim] === "undefined") {
                updateDaftarPreview.push({
                   ...row,
+                  checked: true,
                });
             } else {
                updateDaftarPreview.push({
                   ...row,
+                  checked: false,
                   keterangan: renderKeterangan(data[row.nim]),
                });
             }
