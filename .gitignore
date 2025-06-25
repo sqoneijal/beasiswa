@@ -139,3 +139,4 @@ controlpanel/build.sh
 controlpanel/assets/tinymce
 
 controlpanel/pusaka.py
+.tmp.driveupload

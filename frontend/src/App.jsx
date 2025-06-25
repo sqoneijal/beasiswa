@@ -69,9 +69,9 @@ const App = () => {
             return;
          }
 
-         const logoutUrl = `https://iam.ar-raniry.ac.id/realms/uinar/protocol/openid-connect/logout?redirect_uri=${encodeURIComponent(
-            location.href
-         )}`;
+         const logoutUrl = `https://iam.ar-raniry.ac.id/realms/uinar/protocol/openid-connect/logout?client_id=${
+            window.sso.clientId
+         }&post_logout_redirect_uri=${encodeURIComponent(location.href)}`;
          window.open(logoutUrl, "_self");
       });
       fetch.finally(() => {
