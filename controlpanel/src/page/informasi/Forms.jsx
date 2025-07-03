@@ -115,7 +115,7 @@ const Forms = ({ setPageTypeButton }) => {
                      errors
                   )}
                   <Editor
-                     tinymceScriptSrc="/assets/tinymce/tinymce.min.js"
+                     tinymceScriptSrc="/controlpanel/assets/tinymce/tinymce.min.js"
                      licenseKey="gpl"
                      onInit={(_evt, editor) => (editorRef.current = editor)}
                      initialValue={h.parse("content", input)}
