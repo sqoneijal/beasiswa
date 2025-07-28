@@ -1,5 +1,4 @@
 import moment from "moment";
-import React from "react";
 import { Col, Row, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Each } from "~/Each";
@@ -18,7 +17,7 @@ const InformasiPendaftaran = () => {
    const renderBukti = (lampiran, id) => {
       if (typeof lampiran[id] !== "undefined") {
          return (
-            <a href={`https://lh3.googleusercontent.com/d/${h.parse("google_drive_id", lampiran[id])}?authuser=1/view`} target="_blank">
+            <a href={h.parse("file_path", lampiran[id])} target="_blank">
                {h.parse("orig_name", lampiran[id])}
             </a>
          );

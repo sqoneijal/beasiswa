@@ -140,3 +140,6 @@ controlpanel/assets/tinymce
 
 controlpanel/pusaka.py
 .tmp.driveupload
+app/Helpers/cdn_helper.php
+frontend/build.js
+controlpanel/build.js

@@ -4,9 +4,6 @@ namespace App\Controllers\Mahasiswa;
 
 use App\Controllers\BaseController;
 use App\Models\Mahasiswa\LampiranUpload as Model;
-use Google\Client as Google_Client;
-use Google\Service\Drive as Google_Service_Drive;
-use Google\Service\Drive\DriveFile as Google_Service_Drive_DriveFile;
 
 class LampiranUpload extends BaseController
 {
@@ -16,34 +13,11 @@ class LampiranUpload extends BaseController
       $response = ['status' => false, 'errors' => []];
       $file = $this->request->getFile('file');
       if ($file) {
-         $parentId = '1407S_6xxwNQ6b6LoxTL54BsAGnqYC9Ag';
+         $cdn_upload = cdn_upload($file, 'lampiran_mahasiswa');
 
-         $client = new Google_Client();
-         $client->setAuthConfig(WRITEPATH . 'beasiswa-service.json');
-         $client->addScope(Google_Service_Drive::DRIVE);
-
-         $driveService = new Google_Service_Drive($client);
-
-         $driveFile = new Google_Service_Drive_DriveFile();
-         $folderId = cariFolderGoogleDrive($driveService, 'lampiran_mahasiswa', $parentId);
-         $endPointFolder = cariFolderGoogleDrive($driveService, $this->post['nim'], $folderId);
-
-         if ($endPointFolder === null) {
-            $endPointFolder = buatFolderGoogleDrive($driveService, $this->post['nim'], $folderId);
-         }
-
-         $driveFile->setName($file->getClientName());
-         $driveFile->setParents([$endPointFolder]);
-
-         $googleFile = $driveService->files->create($driveFile, array(
-            'data' => file_get_contents($file->getTempName()),
-            'mimeType' => $file->getClientMimeType(),
-            'uploadType' => 'multipart'
-         ));
-
-         if ($googleFile['id']) {
-            $this->post['orig_name'] = $file->getClientName();
-            $this->post['google_drive_id'] = $googleFile['id'];
+         if ($cdn_upload) {
+            $this->post['file_path'] = $cdn_upload;
+            $this->post['orig_name'] = $file->getName();
 
             $model = new Model();
             $content = $model->uploadDokumen($this->post);

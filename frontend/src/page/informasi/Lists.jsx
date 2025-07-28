@@ -1,6 +1,6 @@
 import lozad from "lozad";
 import moment from "moment";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Each } from "~/Each";
@@ -45,7 +45,7 @@ const Lists = ({ daftarInformasi, totalData, currentPage, getData }) => {
    }, [paginationRender]);
 
    const renderThumbnail = (src) => {
-      return src ? `https://lh3.googleusercontent.com/d/${src}=w410?authuser=1/view` : "/assets/empty-image.webp";
+      return src || "/assets/empty-image.webp";
    };
 
    useLayoutEffect(() => {

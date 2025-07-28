@@ -39,7 +39,7 @@ abstract class BaseController extends Controller
     *
     * @var list<string>
     */
-   protected $helpers = ['autoload'];
+   protected $helpers = ['autoload', 'cdn'];
 
    public $data;
    public $post;

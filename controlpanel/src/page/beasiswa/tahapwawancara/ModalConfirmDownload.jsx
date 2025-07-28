@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import writeXlsxFile from "write-excel-file";
@@ -51,7 +51,7 @@ const ModalConfirmDownload = () => {
          const setRowLampiran = daftarLampiran.map((item) => {
             const lampiran = row.lampiran_upload?.[item.id];
             return {
-               value: lampiran ? `https://lh3.googleusercontent.com/d/${lampiran.google_drive_id}?authuser=1/view` : "N/A",
+               value: lampiran ? lampiran.file_path : "N/A",
             };
          });
 

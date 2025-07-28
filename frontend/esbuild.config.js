@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const { build } = require("esbuild");
 const path = require("path");
 
@@ -16,6 +14,7 @@ build({
    jsxSideEffects: true,
    splitting: true,
    outdir: "./bundle",
+   jsx: "automatic",
    loader: {
       ".js": "jsx",
       ".png": "dataurl",

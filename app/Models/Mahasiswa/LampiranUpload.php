@@ -28,7 +28,7 @@ class LampiranUpload extends Common
             $table->where('nim', $post['nim']);
             $table->update([
                'orig_name' => $post['orig_name'],
-               'google_drive_id' => $post['google_drive_id'],
+               'file_path' => $post['file_path'],
                'modified' => new RawSql('NOW()'),
                'user_modified' => $post['nim']
             ]);
@@ -37,7 +37,7 @@ class LampiranUpload extends Common
                'nim' => $post['nim'],
                'id_lampiran_upload' => $post['id_lampiran_upload'],
                'orig_name' => $post['orig_name'],
-               'google_drive_id' => $post['google_drive_id'],
+               'file_path' => $post['file_path'],
                'uploaded' => new RawSql('NOW()'),
                'user_modified' => $post['nim']
             ]);

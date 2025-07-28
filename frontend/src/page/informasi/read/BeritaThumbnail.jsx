@@ -1,5 +1,5 @@
 import lozad from "lozad";
-import React, { useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import * as h from "~/Helpers";
 
@@ -13,7 +13,7 @@ const BeritaThumbnail = () => {
    }, []);
 
    const renderThumbnail = (src) => {
-      return src ? `https://lh3.googleusercontent.com/d/${src}=w1290?authuser=1/view` : "/assets/empty-image.webp";
+      return src || "/assets/empty-image.webp";
    };
 
    return (

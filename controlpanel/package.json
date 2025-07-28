@@ -4,7 +4,8 @@
    "main": "app.js",
    "scripts": {
       "dev": "./pre-dev.sh && esbuild --define:process.env.NODE_ENV=\\\"development\\\" ./src/App.jsx --bundle --watch --alias:~=./src/ --outdir=./bundle --loader:.svg=dataurl --loader:.webp=dataurl --loader:.eot=copy --loader:.png=dataurl --loader:.jpg=copy --loader:.woff=copy --loader:.woff2=copy --loader:.ttf=copy --sourcemap --log-limit=0 --inject:./src/assets/js/node-waves.js --inject:./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.js",
-      "build": "./pre-build.sh && ./esbuild.config.js && ./build.sh",
+      "clean": "node clean.js",
+      "build": "npm run clean && node esbuild.config.js && node build.js",
       "build_tinymce": "node ./build_tinymce.js"
    },
    "keywords": [],
