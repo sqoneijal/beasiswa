@@ -102,9 +102,9 @@ const Forms = ({ initPage }) => {
                                              <td>{h.parse("nama", row)}</td>
                                              <td>
                                                 <a
-                                                   href={`https://lh3.googleusercontent.com/d/${
-                                                      renderBukti(row.id, lampiranTelahDiUpload).google_drive_id
-                                                   }?authuser=1/view`}
+                                                   href={`https://cdn.ar-raniry.ac.id/beasiswa/lampiran_mahasiswa/${
+                                                      renderBukti(row.id, lampiranTelahDiUpload).orig_name
+                                                   }`}
                                                    target="_blank">
                                                    {renderBukti(row.id, lampiranTelahDiUpload).orig_name}
                                                 </a>

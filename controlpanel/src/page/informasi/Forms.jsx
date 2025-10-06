@@ -118,7 +118,8 @@ const Forms = ({ setPageTypeButton }) => {
                      tinymceScriptSrc="/controlpanel/assets/tinymce/tinymce.min.js"
                      licenseKey="gpl"
                      onInit={(_evt, editor) => (editorRef.current = editor)}
-                     initialValue={h.parse("content", input)}
+                     value={input?.content}
+                     onEditorChange={(value) => setInput(prev=>({...prev, content: value}))}
                      init={{
                         height: 500,
                         menubar: false,

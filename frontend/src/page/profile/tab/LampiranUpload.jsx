@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Card, Table } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useSelector } from "react-redux";
@@ -111,12 +111,7 @@ const LampiranUpload = () => {
                               {typeof lampiranDiUpload[row.id] === "undefined" ? (
                                  <span className="text-danger">Belum diupload</span>
                               ) : (
-                                 <a
-                                    href={`https://lh3.googleusercontent.com/d/${h.parse(
-                                       "google_drive_id",
-                                       lampiranDiUpload[row.id]
-                                    )}?authuser=1/view`}
-                                    target="_blank">
+                                 <a href={h.parse("file_path", lampiranDiUpload[row.id])} target="_blank">
                                     {h.parse("orig_name", lampiranDiUpload[row.id])}
                                  </a>
                               )}

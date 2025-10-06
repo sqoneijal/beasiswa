@@ -119,7 +119,7 @@ class GenerateBeasiswa extends Common
                'nama' => $post['nama']
             ]);
          }
-         return ['status' => true, 'content' => '', 'msg_response' => 'Pendaftaran berhasil.'];
+         return ['status' => true, 'msg_response' => 'Pendaftaran berhasil.'];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }

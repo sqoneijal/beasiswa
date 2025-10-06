@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Col, Table } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useSelector } from "react-redux";
@@ -94,6 +94,18 @@ const Content = () => {
       );
    };
 
+   const renderStatusPendaftaranBeasiswa = (key, message = null) => {
+      const array = {
+         "": "Status pendaftaran anda sedang divalidasi oleh admin.",
+         1: "Selamat berkas anda lulus.",
+         2: `Perbaiki berkas [${message}]. Catatan penting: Klik pada menu profile, kemudian klik pada tab Lampiran Upload untuk memperbaiki berkas.`,
+         3: "Selamat anda masuk ke tahap wawancara.",
+         4: "Selamat anda telah lulus sebagai penerima beasiswa.",
+         5: "Beasiswa anda dibatalkan.",
+      };
+      return array[key];
+   };
+
    return isLoading ? (
       loader
    ) : (
@@ -112,7 +124,12 @@ const Content = () => {
                {h.objLength(statusPendaftaranBeasiswa) && (
                   <div className="blog_details-inner-text mr-80 mt-60">
                      <h3 className="course_details-title">Status Pendaftaran Beasiswa</h3>
-                     {h.parse("sudah_divalidasi", statusPendaftaranBeasiswa) === "f" && <p>Status pendaftaran anda sedang divalidasi oleh admin.</p>}
+                     <p style={{ fontSize: 30, lineHeight: 1, color: "red" }}>
+                        {renderStatusPendaftaranBeasiswa(
+                           statusPendaftaranBeasiswa?.id_status_pendaftaran,
+                           statusPendaftaranBeasiswa?.catatan_perbaikan
+                        )}
+                     </p>
                      <Table responsive hover size="sm">
                         <thead>
                            <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
@@ -128,9 +145,9 @@ const Content = () => {
                                     <td>{h.parse("nama", row)}</td>
                                     <td>
                                        <a
-                                          href={`https://lh3.googleusercontent.com/d/${
-                                             renderBukti(row.id, detailMahasiswa.lampiranYangDiupload).google_drive_id
-                                          }?authuser=1/view`}
+                                          href={`https://cdn.ar-raniry.ac.id/beasiswa/lampiran_mahasiswa/${
+                                             renderBukti(row.id, detailMahasiswa.lampiranYangDiupload).orig_name
+                                          }`}
                                           target="_blank">
                                           {renderBukti(row.id, detailMahasiswa.lampiranYangDiupload).orig_name}
                                        </a>

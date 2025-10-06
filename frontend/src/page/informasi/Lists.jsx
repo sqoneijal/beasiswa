@@ -80,9 +80,7 @@ const Lists = ({ daftarInformasi, totalData, currentPage, getData }) => {
                                  </span>
                               </div>
                               <h5 className="h2_blog-content-title">
-                                 <Link to={`/informasi/read/${h.parse("slug", row)}`}>
-                                    {h.parse("judul", row)} - {row.id}
-                                 </Link>
+                                 <Link to={`/informasi/read/${h.parse("slug", row)}`}>{h.parse("judul", row)}</Link>
                               </h5>
                               <Link to={`/informasi/read/${h.parse("slug", row)}`} className="theme-btn blog-btn t-theme-btn">
                                  Selengkapnya
